@@ -1,4 +1,16 @@
-# Bash prompt by Joris Hartog
+# bashrc by Joris Hartog
+
+# Only execute this file if it's an interactive shell
+[ -z "$PS1" ] && return
+
+# Set locale settings
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+# Please don't Ruby without rbenv
+if [ command -v rbenv ]; then
+    eval "$(rbenv init -)"
+fi
 
 # Colors for clarity
 RESET="\[\e[0;m\]"
