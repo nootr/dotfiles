@@ -27,7 +27,7 @@ function parse_git_branch() {
     if [ ! "${BRANCH}" == "" ]
     then
 	STAT=`parse_git_dirty`
-	echo "[${BRANCH}${STAT}]"
+	echo "(${STAT}${BRANCH})"
     else
 	echo ""
     fi
@@ -60,11 +60,7 @@ function parse_git_dirty {
     if [ "${dirty}" == "0" ]; then
     	bits="!${bits}"
     fi
-    if [ ! "${bits}" == "" ]; then
-    	echo " ${bits}"
-    else
-    	echo ""
-    fi
+    echo "$bits"
 }
 
 # And a nice, clear, table-flippin' prompt
