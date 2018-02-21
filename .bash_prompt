@@ -59,7 +59,7 @@ function parse_git_dirty {
 LINE="${GREY}------------------------------------------------------------${RESET}\n"
 RETURN_STATUS="if [ \$? -eq 0 ]; then echo '${GREEN}┏━┓'; else echo '${RED}(╯°□°）╯︵ ┻━┻'; fi"
 
-PROMPT_PREFIX="${LINE}\`${RETURN_STATUS}\` ${BLUE}\h:${LIGHT_BLUE}\w${RED}"
+PROMPT_PREFIX="${LINE}\`${RETURN_STATUS}\` ${BLUE}\`hostname\`:${LIGHT_BLUE}\w${RED}"
 PROMPT_SUFFIX="${GREEN} » ${RESET}"
 
 export PS1="$PROMPT_PREFIX\`parse_git_branch\`$PROMPT_SUFFIX"
