@@ -13,13 +13,28 @@ if [ -x "$(command -v rbenv)" ]; then
 fi
 
 # Colors for clarity
-RESET="\[\e[0;m\]"
-GREY="\[\e[1;30m\]"
-RED="\[\e[0;31m\]"
-GREEN="\[\e[0;32m\]"
-YELLOW="\[\e[0;33m\]"
-BLUE="\[\e[0;34m\]"
-LIGHT_BLUE="\[\e[1;34m\]"
+RESET="\033[0;m"
+GREY="\033[1;30m"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+BLUE="\033[0;34m"
+LIGHT_BLUE="\033[1;34m"
+
+# Gotta know where you are.. stats!
+function jtop() {
+    DISK_USAGE=`df -Ph / | grep -v Filesystem |awk '{print $5}' | grep -Eo '[0-9]*'`
+    echo -en "${GREY}┌─${LIGHT_BLUE}Disk usage${GREY}─────────┐             "
+    echo -en "${GREEN}`date`${GREY}\n│${GREEN}"
+    for i in 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100; do
+	if [ "$DISK_USAGE" -gt "$i" ]; then
+	    echo -n "#"
+	else
+	    echo -n " "
+	fi
+    done
+    echo -en "${GREY}│\n└────────────────────┘\n${LIGHT_BLUE}`w`${RESET}\n"
+}
 
 # More git, more better
 function parse_git_branch() {
@@ -64,10 +79,13 @@ function parse_git_dirty {
 }
 
 # And a nice, clear, table-flippin' prompt
-LINE="${GREY}------------------------------------------------------------${RESET}\n"
+LINE="${GREY}----------------------------------------------------------------${RESET}\n"
 RETURN_STATUS="if [ \$? -eq 0 ]; then echo '${GREEN}┏━┓'; else echo '${RED}(╯°□°）╯︵ ┻━┻'; fi"
 
 PROMPT_PREFIX="${LINE}\`${RETURN_STATUS}\` ${BLUE}\`hostname\`:${LIGHT_BLUE}\w${RED}"
 PROMPT_SUFFIX="${GREEN} » ${RESET}"
 
 export PS1="$PROMPT_PREFIX\`parse_git_branch\`$PROMPT_SUFFIX"
+
+# Everything done? Welcome the user with statistics! top? nah.. htop? nah.. gtop? no! JTOP!
+jtop
