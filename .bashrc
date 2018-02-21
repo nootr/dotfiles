@@ -8,7 +8,7 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 # Please don't Ruby without rbenv
-if [ command -v rbenv ]; then
+if [ -x "$(command -v rbenv)" ]; then
     eval "$(rbenv init -)"
 fi
 
