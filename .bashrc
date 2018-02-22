@@ -13,13 +13,13 @@ if [ -x "$(command -v rbenv)" ]; then
 fi
 
 # Colors for clarity
-RESET="\033[0;m"
-GREY="\033[1;30m"
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-YELLOW="\033[0;33m"
-BLUE="\033[0;34m"
-LIGHT_BLUE="\033[1;34m"
+RESET="\[\033[0;m\]"
+GREY="\[\033[1;30m\]"
+RED="\[\033[0;31m\]"
+GREEN="\[\033[0;32m\]"
+YELLOW="\[\033[0;33m\]"
+BLUE="\[\033[0;34m\]"
+LIGHT_BLUE="\[\033[1;34m\]"
 
 # Gotta know where you are.. stats!
 function jtop() {
