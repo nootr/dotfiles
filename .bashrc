@@ -34,7 +34,12 @@ function jtop() {
     DISK_USAGE=`df -Ph / | grep -v Filesystem |awk '{print $5}' | grep -Eo '[0-9]*'`
 
     echo -en "${GREY}┌─${LIGHT_BLUE}Disk usage${GREY}─────────┐             "
-    echo -en "${GREEN}`date`${GREY}\n│${GREEN}"
+    echo -en "${GREEN}`date`${GREY}\n│"
+    if [ "$DISK_USAGE" -gt "70" ]; then
+	echo -en "${RED}"
+    else
+	echo -en "${GREEN}"
+    fi
     for i in 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100; do
 	if [ "$DISK_USAGE" -gt "$i" ]; then
 	    echo -n "#"
