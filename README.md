@@ -3,14 +3,14 @@
 It's simple! Either:
 
 ```
-git clone git@curlba.sh:bashprompt
+git clone http://curlba.sh/jhartog/bashprompt.git
 cat bashprompt/.bashrc >> ~/.bashrc
 ```
 
 or (recommended):
 
 ```
-git clone git@curlba.sh:bashprompt
+git clone http://curlba.sh/jhartog/bashprompt.git
 cp bashprompt/.bashrc ~/.bash_prompt
 echo "source ~/.bash_prompt" >> ~/.bashrc
 ```
