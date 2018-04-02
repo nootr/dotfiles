@@ -15,7 +15,7 @@ fi
 # Gotta know where you are.. stats!
 function jtop() {
     RESET="\033[0;m"
-    GREY="\033[1;30m"
+    GRAY="\033[1;30m"
     RED="\033[0;31m"
     GREEN="\033[0;32m"
     YELLOW="\033[0;33m"
@@ -27,8 +27,8 @@ function jtop() {
     IPS_LEN=${#IPS}
     SHIFT=$((37 - $IPS_LEN))
 
-    echo -en "${GREY}┌─${LIGHT_BLUE}Disk usage${GREY}─────────┐       "
-    echo -en "${GREEN}`date`${GREY}\n│"
+    echo -en "${GRAY}┌─${LIGHT_BLUE}Disk usage${GRAY}─────────┐       "
+    echo -en "${GREEN}`date`${GRAY}\n│"
     if [ "$DISK_USAGE" -gt "70" ]; then
 	echo -en "${RED}"
     else
@@ -41,11 +41,11 @@ function jtop() {
 	    echo -n " "
 	fi
     done
-    echo -en "${GREY}│${RED}"
+    echo -en "${GRAY}│${RED}"
     for i in $(seq 1 $SHIFT); do
 	echo -n " "
     done
-    echo -en "${IPS}${GREY}\n└────────────────────┘${RESET}\n"
+    echo -en "${IPS}${GRAY}\n└────────────────────┘${RESET}\n"
 }
 
 # More git, more better
@@ -93,7 +93,7 @@ function parse_git_dirty {
 function generate_prompt {
   EXITSTATUS="$?"
 
-  GREY="\[\033[1;30m\]"
+  GRAY="\[\033[1;30m\]"
   RED="\[\033[0;31m\]"
   GREEN="\[\033[0;32m\]"
   YELLOW="\[\033[0;33m\]"
@@ -105,18 +105,17 @@ function generate_prompt {
   HOST="\h"
   USER="\u"
   DIR="\w"
-  NEWLINE="\n"
   DATE="\d"
   TIME="\t"
 
-  LINE="${GREY}-------------------------------------------------------------\n${OFF}"
+  LINE="${GRAY}-------------------------------------------------------------\n${OFF}"
   PROMPT="${LIGHT_BLUE}${TIME} ${DATE} [${USER}@${HOST}] ${RED}$(parse_git_branch)${OFF}"
 
   if [ "${EXITSTATUS}" -eq 0 ]
   then
-      PS1="${LINE}${PROMPT}\n\w ${GREEN}»${OFF} "
+      PS1="${LINE}${PROMPT}\n${DIR} ${GREEN}»${OFF} "
   else
-      PS1="${LINE}${PROMPT}\n\w ${RED}»${OFF} "
+      PS1="${LINE}${PROMPT}\n${DIR} ${RED}»${OFF} "
   fi
 
   PS2="${BOLD}>${OFF} "
