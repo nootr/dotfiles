@@ -23,6 +23,9 @@ function jtop() {
     LIGHT_BLUE="\033[1;34m"
 
     DISK_USAGE=`df -Ph / | grep -v Filesystem |awk '{print $5}' | grep -Eo '[0-9]*'`
+    IPS=`ifconfig | awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ { printf("%s ", $2) }'`
+    IPS_LEN=${#IPS}
+    SHIFT=$((37 - $IPS_LEN))
 
     echo -en "${GREY}┌─${LIGHT_BLUE}Disk usage${GREY}─────────┐       "
     echo -en "${GREEN}`date`${GREY}\n│"
@@ -38,7 +41,11 @@ function jtop() {
 	    echo -n " "
 	fi
     done
-    echo -en "${GREY}│\n└────────────────────┘${RESET}\n"
+    echo -en "${GREY}│${RED}"
+    for i in $(seq 1 $SHIFT); do
+	echo -n " "
+    done
+    echo -en "${IPS}${GREY}\n└────────────────────┘${RESET}\n"
 }
 
 # More git, more better
