@@ -25,9 +25,9 @@ function jtop() {
     DISK_USAGE=`df -Ph / | grep -v Filesystem |awk '{print $5}' | grep -Eo '[0-9]*'`
     IPS=`ifconfig | awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ { printf("%s ", $2) }'`
     IPS_LEN=${#IPS}
-    SHIFT=$((37 - $IPS_LEN))
+    SHIFT=$((40 - $IPS_LEN))
 
-    echo -en "${GRAY}┌─${LIGHT_BLUE}Disk usage${GRAY}─────────┐       "
+    echo -en "${GRAY}┌─${LIGHT_BLUE}Disk usage${GRAY}─────────┐          "
     echo -en "${GREEN}`date`${GRAY}\n│"
     if [ "$DISK_USAGE" -gt "70" ]; then
 	echo -en "${RED}"
