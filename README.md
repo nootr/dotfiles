@@ -1,18 +1,19 @@
 ## Installation
 
-It's simple! Either:
+It's simple!
 
-```
-git clone http://curlba.sh/jhartog/bashprompt.git
-cat bashprompt/.bashrc >> ~/.bashrc
-```
-
-or (recommended):
+1. Copy
+2. Paste
+3. ???
+4. Profit!
 
 ```
 git clone http://curlba.sh/jhartog/bashprompt.git
 cp bashprompt/.bashrc ~/.bash_prompt
-echo "source ~/.bash_prompt" >> ~/.bashrc
+if [ -z "$(grep 'source ~/.bash_prompt' ~/.bashrc)" ]; then cat >> ~/.bashrc << "EOF"
+# Import bashprompt
+source ~/.bash_prompt
+EOF
+fi
+source ~/.bashrc
 ```
-
-It's your choice. Have fun! :)
