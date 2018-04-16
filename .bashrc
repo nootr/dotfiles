@@ -41,11 +41,14 @@ function jtop() {
 	    echo -n " "
 	fi
     done
-    echo -en "${GRAY}│${RED}"
+    echo -en "${GRAY}│"
     for i in $(seq 1 $SHIFT); do
 	echo -n " "
     done
-    echo -en "${IPS}${GRAY}\n└────────────────────┘${RESET}\n"
+    echo -en "${IPS}${GRAY}\n└────────────────────┘${RESET}                   "
+    curl --head --max-time 2 curlba.sh &> /dev/null \
+      && echo -en " ${GRAY}curlba.sh: ${GREEN}[ONLINE]${RESET}\n" \
+      || echo -en "${GRAY}curlba.sh:${RED} [OFFLINE]${RESET}\n"
 }
 
 # More git, more better
