@@ -12,6 +12,13 @@ if [ -x "$(command -v rbenv)" ]; then
     eval "$(rbenv init -)"
 fi
 
+# Please don't Python withour virtualenv and direnv
+show_virtual_env() {
+  if [ -n "$VIRTUAL_ENV" ]; then
+    echo "($(basename $VIRTUAL_ENV))"
+  fi
+}
+
 # Gotta know where you are.. stats!
 function jtop() {
     RESET="\033[0;m"
@@ -116,15 +123,16 @@ function generate_prompt {
 
   if [ "${EXITSTATUS}" -eq 0 ]
   then
-      PS1="${LINE}${PROMPT}\n${DIR} ${GREEN}»${OFF} "
+    PS1="$(show_virtual_env)${LINE}${PROMPT}\n${DIR} ${GREEN}»${OFF} "
   else
-      PS1="${LINE}${PROMPT}\n${DIR} ${RED}»${OFF} "
+    PS1="$(show_virtual_env)${LINE}${PROMPT}\n${DIR} ${RED}»${OFF} "
   fi
 
   PS2="${BOLD}>${OFF} "
 }
 
 PROMPT_COMMAND=generate_prompt
+eval "$(direnv hook bash)"
 
 # Everything done? Welcome the user with statistics! top? nah.. htop? nah.. gtop? no! JTOP!
 jtop
