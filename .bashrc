@@ -12,6 +12,16 @@ if [ -x "$(command -v rbenv)" ]; then
     eval "$(rbenv init -)"
 fi
 
+# Password generator
+function pwgen {
+  HENKIE=12
+  if [[ $1 =~ ^[0-9]+$ ]]; then
+    HENKIE=$1
+  fi
+  base64 /dev/urandom | head -c $HENKIE
+  echo
+}
+
 # Please don't Python withour virtualenv and direnv
 show_virtual_env() {
   if [ -n "$VIRTUAL_ENV" ]; then
