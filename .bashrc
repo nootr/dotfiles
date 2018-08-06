@@ -18,7 +18,7 @@ function pwgen {
   if [[ $1 =~ ^[0-9]+$ ]]; then
     HENKIE=$1
   fi
-  base64 /dev/urandom | head -c $HENKIE
+  base64 /dev/urandom | head -c $HENKIE | tr -d '/'
   echo
 }
 
