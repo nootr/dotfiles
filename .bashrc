@@ -29,6 +29,44 @@ show_virtual_env() {
   fi
 }
 
+# Implement autocomplete as root
+_root_complete()
+{
+  # Generates autocomplete suggestions for paths as
+  # a sudo user, so that root directories can be tab-
+  # completed.
+  #
+  # Author: jhartog
+
+  local cur
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  _suggestions=$(echo -n "${cur}" | sudo python -c """
+import sys, os
+
+pwd = sys.argv[1]
+
+# Parse relative and absolute path
+input = sys.stdin.readline()
+relative_path = ''
+path = pwd
+if '/' in input:
+  relative_path = input.rsplit('/', 1)[0] + '/'
+  path = os.path.abspath(os.path.join(pwd, relative_path))
+
+# Fetch content and output list
+if os.path.isdir(path):
+  content_raw = os.listdir(path)
+  content = [relative_path + x for x in content_raw]
+  sys.stdout.write(' '.join(content))
+  """ "$(pwd)")
+  COMPREPLY=( $(compgen -W "${_suggestions}" -- ${cur}) )
+
+  return 0
+}
+
+complete -o filenames -F _root_complete ls cd vim less cat grep sudoedit
+
 # Gotta know where you are.. stats!
 function jtop() {
     RESET="\033[0;m"
