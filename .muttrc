@@ -1,0 +1,29 @@
+# About Me
+set from = "jhartog@hostnet.nl"
+set realname = "Joris Hartog"
+
+# My credentials
+set smtp_url = "smtp://jhartog@hostnet.nl@mailbase2.hostnetbv.nl:587/"
+set smtp_pass = "$(pass HN/mail/smtp/mailbase2.hostnetbv.nl)"
+set imap_user = "jhartog@hostnet.nl"
+set imap_pass = "$(pass HN/mail/imap/mailoffice.hostnet.nl)"
+
+# My mailboxes
+set folder = "imaps://mailoffice.hostnet.nl:993"
+set spoolfile = "+INBOX"
+
+
+# Where to put the stuff
+set header_cache = "~/.mutt/cache/headers"
+set message_cachedir = "~/.mutt/cache/bodies"
+set certificate_file = "~/.mutt/certificates"
+
+# Etc
+set mail_check = 30
+set move = no
+set imap_keepalive = 900
+set sort = threads
+set editor = "vim"
+
+# GnuPG bootstrap
+# source ~/.mutt/gpg.rc
