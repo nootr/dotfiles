@@ -3,13 +3,13 @@ set from = "jhartog@hostnet.nl"
 set realname = "Joris Hartog"
 
 # My credentials
-set smtp_url = "smtp://jhartog@hostnet.nl@mailbase2.hostnetbv.nl:587/"
-set smtp_pass = "$(pass HN/mail/smtp/mailbase2.hostnetbv.nl)"
-set imap_user = "jhartog@hostnet.nl"
-set imap_pass = "$(pass HN/mail/imap/mailoffice.hostnet.nl)"
+set smtp_url = "smtp://jhartog@mailbase2.hostnetbv.nl/"
+#set smtp_pass = "$(pass HN/mail/smtp/mailbase2.hostnetbv.nl)"
+set imap_user = "jhartog"
+#set imap_pass = "$(pass HN/mail/imap/mailoffice.hostnet.nl)"
 
 # My mailboxes
-set folder = "imaps://mailoffice.hostnet.nl:993"
+set folder = "imaps://mailoffice.hostnet.nl/"
 set spoolfile = "+INBOX"
 
 
@@ -24,6 +24,8 @@ set move = no
 set imap_keepalive = 900
 set sort = threads
 set editor = "vim"
+set ssl_starttls = yes
+set ssl_force_tls = yes
 
 # GnuPG bootstrap
 # source ~/.mutt/gpg.rc
