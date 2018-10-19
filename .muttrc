@@ -3,10 +3,10 @@ set from = "jhartog@hostnet.nl"
 set realname = "Joris Hartog"
 
 # My credentials
-set smtp_url = "smtp://jhartog@mailbase2.hostnetbv.nl/"
-#set smtp_pass = "$(pass HN/mail/smtp/mailbase2.hostnetbv.nl)"
+set smtp_url = "smtp://mailbase2.hostnetbv.nl/"
+set smtp_pass = `pass HN/mail/smtp/mailbase2.hostnetbv.nl`
 set imap_user = "jhartog"
-#set imap_pass = "$(pass HN/mail/imap/mailoffice.hostnet.nl)"
+set imap_pass = `pass HN/mail/imap/mailoffice.hostnet.nl`
 
 # My mailboxes
 set folder = "imaps://mailoffice.hostnet.nl/"
@@ -27,8 +27,10 @@ set editor = "vim"
 set ssl_starttls = yes
 set ssl_force_tls = yes
 
-# GnuPG bootstrap
-# source ~/.mutt/gpg.rc
+# GPG
+set crypt_replysign
+set pgp_show_unusable=no
+set pgp_autosign = yes
 
 ###
 # mutt colors
