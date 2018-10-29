@@ -20,7 +20,9 @@ set autoindent
 set shiftwidth=2
 set smartindent
 set smarttab
-set softtabstop=2
+set tabstop=2
+set softtabstop=0
+set expandtab
 
 set undolevels=1000
 set backspace=indent,eol,start
