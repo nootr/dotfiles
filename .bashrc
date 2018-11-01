@@ -29,6 +29,24 @@ show_virtual_env() {
   fi
 }
 
+# Simple alias for something I do way too often
+function peek() {
+  sudo less /home/$1/.bash_history
+}
+
+function _peek_complete() {
+  # Tab-autocomplete for the peek() function
+  local cur
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  _suggestions=$(ls /home)
+  COMPREPLY=( $(compgen -W "${_suggestions}" -- ${cur}) )
+
+  return 0
+}
+
+complete -F _peek_complete peek
+
 # Implement autocomplete as root
 _root_complete()
 {
