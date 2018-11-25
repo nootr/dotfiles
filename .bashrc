@@ -211,5 +211,11 @@ function generate_prompt {
 PROMPT_COMMAND=generate_prompt
 eval "$(direnv hook bash)"
 
+export PATH="$PATH:~/bin"
+
 # Everything done? Welcome the user with statistics! top? nah.. htop? nah.. gtop? no! JTOP!
 jtop
+
+if command -v todo > /dev/null; then
+  todo list
+fi
