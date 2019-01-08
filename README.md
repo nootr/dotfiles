@@ -9,5 +9,8 @@ It's simple!
 
 ```
 git clone http://curlba.sh/jhartog/dotfiles.git
-cp dotfiles/.* ~
+cp dotfiles/.bashrc ~
+cp dotfiles/.muttrc ~
+cp dotfiles/.toprc ~
+cp dotfiles/.vimrc ~
 ```
