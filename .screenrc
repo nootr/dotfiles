@@ -1,0 +1,22 @@
+# Screen rc by Joris Hartog
+
+# Escape with semi-colon instead of ^A
+escape ;;
+
+# Add more serious rollback buffer
+defscrollback 10000
+
+# 256 colors
+term xterm-256color
+
+# Handy statusbar
+hardstatus alwayslastline "%{= KW} %H [%`] %{= Kw}|%{-} %-Lw%n%f %t%+Lw %=%C%a %Y-%M-%d"
+backtick 0 30 30 sh -c 'screen -ls | grep --color=no -o "$PPID[^[:space:]]*"'
+
+# Keybinds
+bind x remove
+bind f split -v
+bind h focus left
+bind l focus right
+bind k focus up
+bind j focus down
