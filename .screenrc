@@ -6,6 +6,9 @@ escape ;;
 # Add more serious rollback buffer
 defscrollback 10000
 
+# Make sure the standard shell is used
+shell -$SHELL
+
 # 256 colors
 term xterm-256color
 
