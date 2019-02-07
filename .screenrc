@@ -9,6 +9,9 @@ defscrollback 10000
 # Make sure the standard shell is used
 shell -$SHELL
 
+# Enable mouse interaction
+mousetrack on
+
 # 256 colors
 term xterm-256color
 
