@@ -22,7 +22,7 @@ altscreen on
 term xterm-256color
 
 # Handy statusbar
-hardstatus alwayslastline '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %` ][ %{B}%Y-%m-%d %{W}%c:%s %{g}]'
+hardstatus alwayslastline '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{K}%`%{g} ][ %{B}%Y-%m-%d %{W}%c:%s %{g}]'
 backtick 0 30 30 sh -c 'screen -ls | grep --color=no -o "$PPID[^[:space:]]*"'
 
 # Keybinds
