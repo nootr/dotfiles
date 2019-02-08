@@ -12,6 +12,9 @@ shell -$SHELL
 # Enable mouse interaction
 mousetrack on
 
+# Do not display the copyright page
+startup_message off
+
 # Enable altscreen to cleanly close vim or less
 altscreen on
 
