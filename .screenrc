@@ -12,6 +12,9 @@ shell -$SHELL
 # Enable mouse interaction
 mousetrack on
 
+# Enable altscreen to cleanly close vim or less
+altscreen on
+
 # 256 colors
 term xterm-256color
 
