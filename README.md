@@ -9,5 +9,5 @@ It's simple!
 
 ```
 git clone http://curlba.sh/jhartog/dotfiles.git
-cp dotfiles/bin/ ~
+cp -a dotfiles/bin/. ~
 ```
