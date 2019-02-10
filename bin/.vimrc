@@ -3,11 +3,13 @@
 
 syntax on
 filetype plugin indent on
+highlight ColorColumn ctermbg=235 guibg=#2c2d27
 
 set number
 set linebreak
 set showbreak=+++
 set textwidth=80
+set colorcolumn=81
 set showmatch
 set visualbell
 
