@@ -3,7 +3,10 @@
 
 syntax on
 filetype plugin indent on
-highlight ColorColumn ctermbg=235 guibg=#2c2d27
+highlight LineNr          ctermfg=DarkGrey
+highlight ColorColumn     ctermbg=235      guibg=#2c2d27
+highlight ExtraWhitespace ctermbg=blue     guibg=blue
+match ExtraWhitespace /\s\+$/
 
 set number
 set linebreak
@@ -29,12 +32,9 @@ set expandtab
 set undolevels=1000
 set backspace=indent,eol,start
 
-highlight ExtraWhitespace ctermbg=blue guibg=blue
-match ExtraWhitespace /\s\+$/
-
-set ruler
-
 noremap <Up> <NOP>
 noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
+
+set rnu
