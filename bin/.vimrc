@@ -29,8 +29,12 @@ set expandtab
 set undolevels=1000
 set backspace=indent,eol,start
 
-" Highlight trailing spaces
 highlight ExtraWhitespace ctermbg=blue guibg=blue
 match ExtraWhitespace /\s\+$/
 
 set ruler
+
+noremap <Up> <NOP>
+noremap <Down> <NOP>
+noremap <Left> <NOP>
+noremap <Right> <NOP>
