@@ -25,7 +25,7 @@ function pwgen {
   echo
 }
 
-# Please don't Python withour virtualenv and direnv
+# Please don't Python without virtualenv and direnv
 show_virtual_env() {
   if [ -n "$VIRTUAL_ENV" ]; then
     echo "($(basename $VIRTUAL_ENV))"
