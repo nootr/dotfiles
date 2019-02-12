@@ -36,6 +36,7 @@ inoremap <Up> <NOP>
 inoremap <Down> <NOP>
 inoremap <Left> <NOP>
 inoremap <Right> <NOP>
+inoremap jj <esc>
 
 noremap <Up> <NOP>
 noremap <Down> <NOP>
