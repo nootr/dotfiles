@@ -95,6 +95,10 @@ function check_backup() {
     https://styx.prod.hostnetbv.nl/check/$1
 }
 
+function check_parentnode() {
+  pqh factsFor -c $1 parentnode
+}
+
 # Gotta know where you are.. stats!
 function jtop() {
     RESET="\033[0;m"
