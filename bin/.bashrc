@@ -99,6 +99,18 @@ function check_parentnode() {
   pqh factsFor -c $1 parentnode
 }
 
+function _known_hosts_complete() {
+  local cur
+  COMPREPLY=()
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  _suggestions=$(awk '{ print $1 }' ~/.ssh/known_hosts)
+  COMPREPLY=( $(compgen -W "${_suggestions}" -- ${cur}) )
+
+  return 0
+}
+
+complete -F _known_hosts_complete check_backup check_parentnode
+
 # Gotta know where you are.. stats!
 function jtop() {
     RESET="\033[0;m"
