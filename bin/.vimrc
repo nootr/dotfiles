@@ -32,16 +32,12 @@ set expandtab
 set undolevels=1000
 set backspace=indent,eol,start
 
-inoremap <Up> <NOP>
-inoremap <Down> <NOP>
-inoremap <Left> <NOP>
-inoremap <Right> <NOP>
 inoremap jj <esc>
 
-noremap <Up> <NOP>
-noremap <Down> <NOP>
-noremap <Left> <NOP>
-noremap <Right> <NOP>
+noremap <Up> :echo "Blasphemy! Stop using the arrow keys!"<CR>k
+noremap <Down> :echo "Blasphemy! Stop using the arrow keys!"<CR>j
+noremap <Left> :echo "Blasphemy! Stop using the arrow keys!"<CR>h
+noremap <Right> :echo "Blasphemy! Stop using the arrow keys!"<CR>l
 
 au VimEnter * RainbowParentheses
 let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
