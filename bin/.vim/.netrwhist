@@ -1,0 +1,8 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_1='/Users/jhartog/projects/puppet/modules/iptables'
+let g:netrw_dirhist_2='/Users/jhartog/projects/puppet/modules/iptables/manifests'
+let g:netrw_dirhist_3='/Users/jhartog/projects/puppet/modules/profile/manifests/security/firewall'
+let g:netrw_dirhist_4='/Users/jhartog/projects/tableau-terraform/terraform.tfstate.d'
+let g:netrw_dirhist_5='/Users/jhartog/projects/tableau-terraform/terraform.tfstate.d/PROD'
+let g:netrw_dirhist_6='/Users/jhartog/projects/puppet/modules/profile/manifests'
