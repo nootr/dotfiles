@@ -10,6 +10,9 @@ export LC_ALL=en_US.UTF-8
 # Set preferred editor
 export EDITOR=vim
 
+# Enable bash vi-mode
+set -o vi
+
 # Please don't Ruby without rbenv
 if [ -x "$(command -v rbenv)" ]; then
     eval "$(rbenv init -)"
