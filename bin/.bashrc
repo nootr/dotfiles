@@ -10,8 +10,10 @@ export LC_ALL=en_US.UTF-8
 # Set preferred editor
 export EDITOR=vim
 
-# Enable bash vi-mode
+# Enable bash vi-mode and bind 'jj' instead of ESC
 set -o vi
+bind '"jj":vi-movement-mode'
+bind -r "\e"
 
 # Please don't Ruby without rbenv
 if [ -x "$(command -v rbenv)" ]; then
