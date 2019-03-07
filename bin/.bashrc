@@ -10,10 +10,11 @@ export LC_ALL=en_US.UTF-8
 # Set preferred editor
 export EDITOR=vim
 
-# Enable bash vi-mode and bind 'jj' instead of ESC
+# Enable bash vi-mode, keep '.' to insert last argument and bind 'jj' for
+# vi-mode.
 set -o vi
 bind '"jj":vi-movement-mode'
-bind -r "\e"
+bind -m vi-command ".":insert-last-argument
 
 # Please don't Ruby without rbenv
 if [ -x "$(command -v rbenv)" ]; then
