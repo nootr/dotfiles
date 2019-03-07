@@ -20,6 +20,13 @@ if [ -x "$(command -v rbenv)" ]; then
     eval "$(rbenv init -)"
 fi
 
+# Please don't Python without virtualenv
+show_virtual_env() {
+  if [ -n "$VIRTUAL_ENV" ]; then
+    echo "($(basename $VIRTUAL_ENV))"
+  fi
+}
+
 # Password generator
 function pwgen {
   HENKIE=12
@@ -28,13 +35,6 @@ function pwgen {
   fi
   base64 /dev/urandom | head -c $HENKIE | tr -d '/'
   echo
-}
-
-# Please don't Python without virtualenv and direnv
-show_virtual_env() {
-  if [ -n "$VIRTUAL_ENV" ]; then
-    echo "($(basename $VIRTUAL_ENV))"
-  fi
 }
 
 # Simple alias for something I do way too often
@@ -116,50 +116,7 @@ function _known_hosts_complete() {
 
 complete -F _known_hosts_complete check_backup check_parentnode
 
-# Gotta know where you are.. stats!
-function jtop() {
-    RESET="\033[0;m"
-    GRAY="\033[1;30m"
-    RED="\033[0;31m"
-    GREEN="\033[0;32m"
-    YELLOW="\033[0;33m"
-    BLUE="\033[0;34m"
-    LIGHT_BLUE="\033[1;34m"
-
-    DISK_USAGE=`df -Ph / | grep -v Filesystem |awk '{print $5}' | grep -Eo '[0-9]*'`
-    IPS=`ifconfig | awk '/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/ { printf("%s ", $2) }'`
-    IPS_LEN=${#IPS}
-    SHIFT=$((40 - $IPS_LEN))
-
-    echo -en "${GRAY}┌─${LIGHT_BLUE}Disk usage${GRAY}─────────┐          "
-    echo -en "${GREEN}`date`${GRAY}\n│"
-    if [ "$DISK_USAGE" -gt "70" ]; then
-	echo -en "${RED}"
-    else
-	echo -en "${GREEN}"
-    fi
-    for i in 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100; do
-	if [ "$DISK_USAGE" -gt "$i" ]; then
-	    echo -n "#"
-	else
-	    echo -n " "
-	fi
-    done
-    echo -en "${GRAY}│"
-    for i in $(seq 1 $SHIFT); do
-	echo -n " "
-    done
-    echo -en "${IPS}${GRAY}\n└────────────────────┘${RESET}                   "
-    curl --head --max-time 2 curlba.sh &> /dev/null \
-      && echo -en " ${GRAY}curlba.sh: ${GREEN}[ONLINE]${RESET}\n" \
-      || echo -en "${GRAY}curlba.sh: ${RED}[OFFLINE]${RESET}\n"
-    echo -n "                                   "
-    curl --head --max-time 2 wingkeememes.nl &> /dev/null \
-      && echo -en " ${GRAY}wingkeememes.nl: ${GREEN}[ONLINE]${RESET}\n" \
-      || echo -en " ${GRAY}wingkeememes.nl: ${RED}[OFFLINE]${RESET}\n"
-}
-
-# More git, more better
+# Git status functions for prompt
 function parse_git_branch() {
     BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
     if [ ! "${BRANCH}" == "" ]
@@ -171,7 +128,7 @@ function parse_git_branch() {
     fi
 }
 
-function parse_git_dirty {
+function parse_git_dirty() {
     status=`git status 2>&1 | tee`
     dirty=`echo -n "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
     untracked=`echo -n "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
@@ -201,45 +158,24 @@ function parse_git_dirty {
     echo "$bits"
 }
 
-function generate_prompt {
+function generate_prompt() {
   EXITSTATUS="$?"
-
-  GRAY="\[\033[1;30m\]"
+  DARK_GRAY="\[\033[1;30m\]"
+  LIGHT_GRAY="\[\033[0;37m\]"
   RED="\[\033[0;31m\]"
   GREEN="\[\033[0;32m\]"
-  YELLOW="\[\033[0;33m\]"
-  BLUE="\[\033[0;34m\]"
-  LIGHT_BLUE="\[\033[1;34m\]"
-  BOLD="\[\033[1m\]"
-  OFF="\[\033[m\]"
+  NC="\[\033[m\]"
 
-  HOST="\h"
-  USER="\u"
-  DIR="\w"
-  DATE="\d"
-  TIME="\t"
+  PROMPT="${DARK_GRAY}[\u@\h ${LIGHT_GRAY}\W${DARK_GRAY}]${RED}\$(parse_git_branch)${NC}"
 
-  LINE="${GRAY}-------------------------------------------------------------\n${OFF}"
-  PROMPT="${LIGHT_BLUE}${TIME} ${DATE} [${USER}@${HOST}] ${RED}$(parse_git_branch)${OFF}"
-
-  if [ "${EXITSTATUS}" -eq 0 ]
-  then
-    PS1="$(show_virtual_env)${LINE}${PROMPT}\n${DIR} ${GREEN}»${OFF} "
+  if [ "${EXITSTATUS}" -eq 0 ]; then
+    PS1="${PROMPT} ${GREEN}\$ ${NC}"
   else
-    PS1="$(show_virtual_env)${LINE}${PROMPT}\n${DIR} ${RED}»${OFF} "
+    PS1="${PROMPT} ${RED}\$ ${NC}"
   fi
-
-  PS2="${BOLD}>${OFF} "
+  PS2="> "
 }
 
 PROMPT_COMMAND=generate_prompt
-eval "$(direnv hook bash)"
 
 export PATH="$PATH:~/bin"
-
-# Everything done? Welcome the user with statistics! top? nah.. htop? nah.. gtop? no! JTOP!
-jtop
-
-if command -v todo > /dev/null; then
-  todo list
-fi
