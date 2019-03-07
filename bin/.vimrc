@@ -10,7 +10,6 @@ match ExtraWhitespace /\s\+$/
 
 set rnu
 set linebreak
-set showbreak=+++
 set textwidth=80
 set colorcolumn=81
 set showmatch
