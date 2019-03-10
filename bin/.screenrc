@@ -9,9 +9,6 @@ defscrollback 10000
 # Make sure the standard shell is used
 shell -$SHELL
 
-# Enable mouse interaction
-mousetrack on
-
 # Do not display the copyright page
 startup_message off
 
@@ -20,6 +17,10 @@ altscreen on
 
 # 256 colors
 term xterm-256color
+
+# Remove seperator bars
+caption string "%{= dd} "
+rendition so =00
 
 # Handy statusbar
 hardstatus alwayslastline '%{= g}[ %` ][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{B}%Y-%m-%d %{W}%c:%s %{g}]'
