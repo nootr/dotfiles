@@ -159,6 +159,7 @@ function parse_git_dirty() {
     echo "$bits"
 }
 
+# Generate bash prompt
 function generate_prompt() {
   EXITSTATUS="$?"
   DARK_GRAY="\[\033[1;30m\]"
@@ -179,4 +180,10 @@ function generate_prompt() {
 
 PROMPT_COMMAND=generate_prompt
 
+# Add homefolder/bin to PATH
 export PATH="$PATH:~/bin"
+
+# ALways work in screen
+if [ -z "$STY" ]; then
+  screen -r || screen && exit
+fi
