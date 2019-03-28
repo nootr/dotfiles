@@ -95,6 +95,14 @@ if os.path.isdir(path):
 complete -o filenames -F _root_complete ls cd vim less cat grep sudoedit
 
 # Work-related stuff
+function doei() {
+  if [ -z "$1" ]; then
+    echo "Usage: doei <IP>"
+  else
+    sudo fail2ban-client set recidive banip $1
+  fi
+}
+
 function check_backup() {
   curl --cert ~/.mcollective.d/credentials/certs/B361C7A1.pem \
     --key ~/.mcollective.d/credentials/private_keys/B361C7A1.pem \
@@ -184,6 +192,6 @@ PROMPT_COMMAND=generate_prompt
 export PATH="$PATH:~/bin"
 
 # ALways work in screen
-if [ -z "$STY" ]; then
-  screen -r || screen && exit
-fi
+#if [ -z "$STY" ]; then
+#  screen -r || screen && exit
+#fi
