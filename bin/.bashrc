@@ -179,9 +179,9 @@ function generate_prompt() {
   PROMPT="${DARK_GRAY}[\u@\h ${LIGHT_GRAY}\W${DARK_GRAY}]${RED}\$(parse_git_branch)${NC}"
 
   if [ "${EXITSTATUS}" -eq 0 ]; then
-    PS1="${PROMPT} ${GREEN}\$ ${NC}"
+    PS1="${PROMPT}${GREEN}\$ ${NC}"
   else
-    PS1="${PROMPT} ${RED}\$ ${NC}"
+    PS1="${PROMPT}${RED}\$ ${NC}"
   fi
   PS2="> "
 }
