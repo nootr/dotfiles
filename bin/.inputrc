@@ -1,4 +1,3 @@
-set show-mode-in-prompt on
 $if mode=vi
 
 set keymap vi-command
