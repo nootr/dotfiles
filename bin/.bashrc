@@ -107,6 +107,7 @@ function check_backup() {
   curl --cert ~/.mcollective.d/credentials/certs/B361C7A1.pem \
     --key ~/.mcollective.d/credentials/private_keys/B361C7A1.pem \
     https://styx.prod.hostnetbv.nl/check/$1
+  echo
 }
 
 function check_parentnode() {
