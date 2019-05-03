@@ -8,6 +8,7 @@ highlight ColorColumn     ctermbg=235      guibg=#2c2d27
 highlight ExtraWhitespace ctermbg=blue     guibg=blue
 match ExtraWhitespace /\s\+$/
 
+set nu
 set rnu
 set linebreak
 set textwidth=80
