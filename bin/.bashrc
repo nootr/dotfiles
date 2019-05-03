@@ -112,6 +112,7 @@ function check_backup() {
 
 function check_parentnode() {
   pqh factsFor -c $1 parentnode
+  echo
 }
 
 function _known_hosts_complete() {
