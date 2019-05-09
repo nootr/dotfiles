@@ -15,10 +15,6 @@ altscreen on
 # 256 colors
 term xterm-256color
 
-# Remove seperator bars
-caption string "%{= dd} "
-rendition so =00
-
 # Handy statusbar
 hardstatus alwayslastline '%{= g}[ %` ][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{B}%Y-%m-%d %{W}%c:%s %{g}]'
 backtick 0 30 30 sh -c 'screen -ls | grep --color=no -o "$PPID[^[:space:]]*"'
