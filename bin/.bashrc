@@ -15,6 +15,7 @@ export EDITOR=vim
 set -o vi
 bind '"jj":vi-movement-mode'
 bind -m vi-command ".":insert-last-argument
+bind -m vi-command "v":""
 
 # Please don't Ruby without rbenv
 if [ -x "$(command -v rbenv)" ]; then
