@@ -95,6 +95,11 @@ if os.path.isdir(path):
 
 complete -o filenames -F _root_complete ls cd vim less cat grep sudoedit
 
+# Quickly move to a temporary folder
+function cdtmp() {
+  cd $(mktemp -d)
+}
+
 # Work-related stuff
 function doei() {
   if [ -z "$1" ]; then
