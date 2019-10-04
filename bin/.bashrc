@@ -185,6 +185,7 @@ function generate_prompt() {
   NC="\[\033[m\]"
 
   PROMPT="${DARK_GRAY}[\u@\h ${LIGHT_GRAY}\W${DARK_GRAY}]${RED}\$(parse_git_branch)${NC}"
+  command -v lolcat > /dev/null && PROMPT="$(lolcat -f <<< "·")$PROMPT"
 
   if [ "${EXITSTATUS}" -eq 0 ]; then
     PS1="${PROMPT}${GREEN}\$ ${NC}"
@@ -198,8 +199,3 @@ PROMPT_COMMAND=generate_prompt
 
 # Add homefolder/bin to PATH
 export PATH="$PATH:~/bin"
-
-# ALways work in screen
-#if [ -z "$STY" ]; then
-#  screen -r || screen && exit
-#fi
