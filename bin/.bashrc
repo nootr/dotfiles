@@ -175,6 +175,17 @@ function parse_git_dirty() {
     echo "$bits"
 }
 
+function lolbash() {
+  if command -v lolcat > /dev/null; then
+    lolcat <<< "Welcome to lolbash!"
+    function generate_prompt() {
+      PS1="$(lolcat -f <<< "$ ")"
+    }
+    PROMPT_COMMAND=generate_prompt
+    exec 1> >(lolcat >&2)
+  fi
+}
+
 # Generate bash prompt
 function generate_prompt() {
   EXITSTATUS="$?"
