@@ -10,6 +10,9 @@ export LC_ALL=en_US.UTF-8
 # Set preferred editor
 export EDITOR=vim
 
+# Use `thefuck` if installed
+command -v thefuck > /dev/null && eval "$(thefuck --alias)"
+
 # Enable bash vi-mode, keep '.' to insert last argument and bind 'jj' for
 # vi-mode.
 set -o vi
