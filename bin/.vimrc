@@ -8,6 +8,9 @@ highlight ColorColumn     ctermbg=235      guibg=#2c2d27
 highlight ExtraWhitespace ctermbg=blue     guibg=blue
 match ExtraWhitespace /\s\+$/
 
+set list
+set listchars=tab:>-
+
 set nu
 set rnu
 set linebreak
@@ -24,10 +27,6 @@ set incsearch
 set autoindent
 set shiftwidth=2
 set smartindent
-set smarttab
-set tabstop=2
-set softtabstop=0
-set expandtab
 
 set undolevels=1000
 set backspace=indent,eol,start
