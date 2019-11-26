@@ -10,6 +10,8 @@ match ExtraWhitespace /\s\+$/
 
 set list
 set listchars=tab:>-
+set tabstop=2
+set expandtab
 
 set nu
 set rnu
