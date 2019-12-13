@@ -41,8 +41,7 @@ let g:netrw_altv = 1
 let g:netrw_winsize = 25
 augroup ProjectDrawer
   autocmd!
-  autocmd VimEnter * :Vexplore
-  autocmd VimEnter * wincmd l
+  autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | :Explore | endif
 augroup END
 
 inoremap jj <esc>
