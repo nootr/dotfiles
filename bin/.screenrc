@@ -1,4 +1,28 @@
 # Screen rc by Joris Hartog
+#
+#
+# ===== CHEAT SHEET =====
+#  Copy/scrollback mode:
+#    C-a [
+#    Space     # Select start
+#    Space     # Select end
+#
+#  Paste
+#    C-a ]
+#
+#  Split screen
+#    C-a |
+#
+#  Switch to next panel
+#    C-a Tab
+#
+#  Create new terminal
+#    C-a c
+#
+#  Switch to next terminal
+#    C-a n
+#
+
 
 # Add more serious rollback buffer
 defscrollback 10000
