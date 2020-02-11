@@ -48,3 +48,7 @@ backtick 0 30 30 sh -c 'screen -ls | grep --color=no -o "$PPID[^[:space:]]*"'
 
 # Enable mousetrack to click for focus
 mousetrack on
+
+# Write copy buffer to Mac OSX pasteboard
+bufferfile /tmp/screen-exchange
+bindkey -m ' ' eval 'stuff \040' 'writebuf' 'exec sh -c "/usr/bin/pbcopy < /tmp/screen-exchange"'
