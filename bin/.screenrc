@@ -3,26 +3,29 @@
 #
 # ===== CHEAT SHEET =====
 #  Copy/scrollback mode:
-#    C-a [
+#    C-j [
 #    Space     # Select start
 #    Space     # Select end
 #
 #  Paste
-#    C-a ]
+#    C-j ]
 #
 #  Split screen
-#    C-a |
+#    C-j |
 #
 #  Switch to next panel
-#    C-a Tab
+#    C-j Tab
 #
 #  Create new terminal
-#    C-a c
+#    C-j c
 #
 #  Switch to next terminal
-#    C-a n
+#    C-j n
 #
 
+
+# Remap C-a to C-j
+escape ^Jj
 
 # Add more serious rollback buffer
 defscrollback 10000
