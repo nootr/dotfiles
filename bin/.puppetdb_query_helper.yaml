@@ -1,4 +1,4 @@
 url: https://puppetdb.hostnetbv.nl:8081
-cert: /Users/jhartog/.mcollective.d/credentials/certs/B361C7A1.pem
-key: /Users/jhartog/.mcollective.d/credentials/private_keys/B361C7A1.pem
+cert: /Users/jhartog/.mcollective.d/credentials/certs/B361C7A1_cert.pem
+key: /Users/jhartog/.mcollective.d/credentials/private_keys/B361C7A1_key.pem
 ca: /Users/jhartog/.mcollective.d/credentials/certs/ca.pem
