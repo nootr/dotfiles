@@ -33,6 +33,8 @@ set smartindent
 set undolevels=1000
 set backspace=indent,eol,start
 
+set clipboard=unnamed
+
 inoremap jj <esc>
 
 noremap <Up> :echo "Blasphemy! Stop using the arrow keys!"<CR>k
