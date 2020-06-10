@@ -3,29 +3,26 @@
 #
 # ===== CHEAT SHEET =====
 #  Copy/scrollback mode:
-#    C-j [
+#    C-a [
 #    Space     # Select start
 #    Space     # Select end
 #
 #  Paste
-#    C-j ]
+#    C-a ]
 #
 #  Split screen
-#    C-j |
+#    C-a |
 #
 #  Switch to next panel
-#    C-j Tab
+#    C-a Tab
 #
 #  Create new terminal
-#    C-j c
+#    C-a c
 #
 #  Switch to next terminal
-#    C-j n
+#    C-a n
 #
 
-
-# Remap C-a to C-j
-escape ^Jj
 
 # Add more serious rollback buffer
 defscrollback 10000
@@ -47,7 +44,7 @@ hardstatus alwayslastline '%{= g}[ %` ][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(
 backtick 0 30 30 sh -c 'screen -ls | grep --color=no -o "$PPID[^[:space:]]*"'
 
 # Enable mousetrack to click for focus
-mousetrack on
+#mousetrack on
 
 # Write copy buffer to Mac OSX pasteboard
 bufferfile /tmp/screen-exchange
