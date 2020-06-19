@@ -34,6 +34,10 @@ set undolevels=1000
 set backspace=indent,eol,start
 
 set clipboard=unnamed
+nnoremap d "xd
+vnoremap d "xd
+nnoremap c "xc
+vnoremap c "xc
 
 inoremap jj <esc>
 
