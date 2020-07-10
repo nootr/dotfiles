@@ -199,6 +199,7 @@ function generate_prompt() {
   LIGHT_GRAY="\[\033[0;37m\]"
   RED="\[\033[0;31m\]"
   GREEN="\[\033[0;32m\]"
+  BLUE="\[\033[0;34m\]"
   NC="\[\033[m\]"
 
   PROMPT="${DARK_GRAY}[\u@\h ${LIGHT_GRAY}\W${DARK_GRAY}]${RED}\$(parse_git_branch)${NC}"
@@ -208,7 +209,7 @@ function generate_prompt() {
   else
     PS1="${PROMPT}${RED}\$ ${NC}"
   fi
-  PS2="> "
+  PS2="${PROMPT}${BLUE}> ${NC}"
 }
 
 PROMPT_COMMAND=generate_prompt
