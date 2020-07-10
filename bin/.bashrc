@@ -113,8 +113,8 @@ function doei() {
 }
 
 function check_backup() {
-  curl --cert ~/.mcollective.d/credentials/certs/B361C7A1.pem \
-    --key ~/.mcollective.d/credentials/private_keys/B361C7A1.pem \
+  curl -k --cert ~/.mcollective.d/credentials/certs/B361C7A1_cert.pem \
+    --key ~/.mcollective.d/credentials/private_keys/B361C7A1_key.pem \
     https://styx.prod.hostnetbv.nl/check/$1
   echo
 }
@@ -135,6 +135,9 @@ function _known_hosts_complete() {
 }
 
 complete -F _known_hosts_complete check_backup check_parentnode
+
+# Python CLI autocomplete
+export PYTHONSTARTUP=~/.pythonrc
 
 # Git status functions for prompt
 function parse_git_branch() {
