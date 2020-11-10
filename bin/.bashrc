@@ -20,6 +20,10 @@ bind '"jj":vi-movement-mode'
 bind -m vi-command ".":insert-last-argument
 bind -m vi-command "v":""
 
+# OpenStack stuff
+alias os="~/openstack_eq/bin/python3 ~/openstack_eq/bin/openstack"
+source ~/.eq-openrc
+
 # Please don't Ruby without rbenv
 if [ -x "$(command -v rbenv)" ]; then
     eval "$(rbenv init -)"
@@ -32,6 +36,12 @@ show_virtual_env() {
   fi
 }
 
+# Please don't perl without plenv
+if [ -x "$(command -v plenv)" ]; then
+  eval "$(plenv init -)"
+  export PATH="$HOME/.plenv/bin:$PATH"
+fi
+
 # Password generator
 function pwgen {
   HENKIE=12
@@ -41,62 +51,6 @@ function pwgen {
   base64 /dev/urandom | head -c $HENKIE | tr -d '/'
   echo
 }
-
-# Simple alias for something I do way too often
-function peek() {
-  sudo less /home/$1/.bash_history
-}
-
-function _peek_complete() {
-  # Tab-autocomplete for the peek() function
-  local cur
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
-  _suggestions=$(ls /home)
-  COMPREPLY=( $(compgen -W "${_suggestions}" -- ${cur}) )
-
-  return 0
-}
-
-complete -F _peek_complete peek
-
-# Implement autocomplete as root
-_root_complete()
-{
-  # Generates autocomplete suggestions for paths as
-  # a sudo user, so that root directories can be tab-
-  # completed.
-  #
-  # Author: jhartog
-
-  local cur
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
-  _suggestions=$(echo -n "${cur}" | sudo python -c """
-import sys, os
-
-pwd = sys.argv[1]
-
-# Parse relative and absolute path
-input = sys.stdin.readline()
-relative_path = ''
-path = pwd
-if '/' in input:
-  relative_path = input.rsplit('/', 1)[0] + '/'
-  path = os.path.abspath(os.path.join(pwd, relative_path))
-
-# Fetch content and output list
-if os.path.isdir(path):
-  content_raw = os.listdir(path)
-  content = [relative_path + x for x in content_raw]
-  sys.stdout.write(' '.join(content))
-  """ "$(pwd)")
-  COMPREPLY=( $(compgen -W "${_suggestions}" -- ${cur}) )
-
-  return 0
-}
-
-complete -o filenames -F _root_complete ls cd vim less cat grep sudoedit
 
 # Quickly move to a temporary folder
 function cdtmp() {
@@ -134,10 +88,7 @@ function _known_hosts_complete() {
   return 0
 }
 
-complete -F _known_hosts_complete check_backup check_parentnode
-
-# Python CLI autocomplete
-export PYTHONSTARTUP=~/.pythonrc
+complete -F _known_hosts_complete ssh check_backup check_parentnode
 
 # Git status functions for prompt
 function parse_git_branch() {
