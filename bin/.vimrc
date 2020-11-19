@@ -1,6 +1,9 @@
 " Wat zit je in mijn vimrc te kijken?!
 " xoxo jhartog
 
+" Use pathogen for Jedi VIM
+execute pathogen#infect()
+
 syntax on
 filetype plugin indent on
 highlight LineNr          ctermfg=DarkGrey
@@ -8,19 +11,16 @@ highlight ColorColumn     ctermbg=235      guibg=#2c2d27
 highlight ExtraWhitespace ctermbg=blue     guibg=blue
 match ExtraWhitespace /\s\+$/
 
-if version >= 703
-  set rnu
-  set colorcolumn=81
-endif
-
 set list
 set listchars=tab:>-
 set tabstop=2
 set expandtab
 
 set nu
+set rnu
 set linebreak
 set textwidth=80
+set colorcolumn=81
 set showmatch
 set visualbell
 
