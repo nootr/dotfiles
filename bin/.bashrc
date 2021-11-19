@@ -157,5 +157,5 @@ function generate_prompt() {
 
 PROMPT_COMMAND=generate_prompt
 
-# Add homefolder/bin to PATH
-export PATH="$PATH:~/bin"
+# Source z
+source ~/bin/z.sh
