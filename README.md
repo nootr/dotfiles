@@ -8,6 +8,6 @@ It's simple!
 4. Profit!
 
 ```
-git clone http://curlba.sh/jhartog/dotfiles.git
+git clone https://github.com/nootr/dotfiles
 cp -a dotfiles/bin/. ~
 ```

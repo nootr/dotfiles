@@ -3,10 +3,6 @@
 # Only execute this file if it's an interactive shell
 [ -z "$PS1" ] && return
 
-# Set locale settings
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-
 # Set preferred editor
 export EDITOR=vim
 
@@ -19,10 +15,6 @@ set -o vi
 bind '"jj":vi-movement-mode'
 bind -m vi-command ".":insert-last-argument
 bind -m vi-command "v":""
-
-# OpenStack stuff
-alias os="~/openstack_eq/bin/python3 ~/openstack_eq/bin/openstack"
-source ~/.eq-openrc
 
 # Please don't Ruby without rbenv
 if [ -x "$(command -v rbenv)" ]; then
