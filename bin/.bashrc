@@ -21,6 +21,11 @@ if [ -x "$(command -v rbenv)" ]; then
     eval "$(rbenv init -)"
 fi
 
+# Please don't Mac without homebrew
+if [ -f /home/linuxbrew/.linuxbrew/bin/brew ]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 # Please don't Python without virtualenv
 show_virtual_env() {
   if [ -n "$VIRTUAL_ENV" ]; then
