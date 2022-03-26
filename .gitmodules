@@ -4,3 +4,6 @@
 [submodule "bin/.vim/pack/flake8/start/vim-flake8"]
 	path = bin/.vim/pack/flake8/start/vim-flake8
 	url = https://github.com/nvie/vim-flake8.git
+[submodule "bin/.vim/pack/vendor/start/nerdtree"]
+	path = bin/.vim/pack/vendor/start/nerdtree
+	url = https://github.com/preservim/nerdtree.git
