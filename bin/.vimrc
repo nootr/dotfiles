@@ -11,6 +11,9 @@ highlight ColorColumn     ctermbg=235      guibg=#2c2d27
 highlight ExtraWhitespace ctermbg=blue     guibg=blue
 match ExtraWhitespace /\s\+$/
 
+autocmd BufRead,BufNewFile *.ilo set filetype=ilo
+autocmd BufWritePre *.py execute ':Black'
+
 set list
 set listchars=tab:>-
 set tabstop=2
