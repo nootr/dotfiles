@@ -13,6 +13,7 @@ match ExtraWhitespace /\s\+$/
 
 autocmd BufRead,BufNewFile *.ilo set filetype=ilo
 autocmd BufWritePre *.py execute ':Black'
+autocmd BufWritePost *.py call flake8#Flake8()
 
 set list
 set listchars=tab:>-

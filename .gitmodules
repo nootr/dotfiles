@@ -1,3 +1,6 @@
 [submodule "bin/.vim/bundle/jedi-vim"]
 	path = bin/.vim/bundle/jedi-vim
 	url = https://github.com/davidhalter/jedi-vim.git
+[submodule "bin/.vim/pack/flake8/start/vim-flake8"]
+	path = bin/.vim/pack/flake8/start/vim-flake8
+	url = https://github.com/nvie/vim-flake8.git
