@@ -1,0 +1,10 @@
+[init]
+	defaultBranch = main
+[user]
+	name = Joris Hartog
+	email = jorishartog@hotmail.com
+[alias]
+	please = push --force-with-lease
+	commend = commit --amend --no-edit
+[pull]
+	rebase = true
