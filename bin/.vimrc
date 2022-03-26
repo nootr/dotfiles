@@ -12,6 +12,7 @@ highlight ExtraWhitespace ctermbg=blue     guibg=blue
 match ExtraWhitespace /\s\+$/
 
 autocmd BufRead,BufNewFile *.ilo set filetype=ilo
+autocmd BufRead,BufNewFile *.py call Pywrap()
 autocmd BufWritePre *.py execute ':Black'
 autocmd BufWritePost *.py call flake8#Flake8()
 
@@ -22,11 +23,15 @@ set expandtab
 
 set nu
 set rnu
-set linebreak
-set textwidth=80
-set colorcolumn=81
 set showmatch
 set visualbell
+
+function! Pywrap()
+  " Only wrap lines in Python files. Black enforces 88 chars per line
+  set linebreak
+  set textwidth=88
+  set colorcolumn=89
+endfunction
 
 set hlsearch
 set smartcase
