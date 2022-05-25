@@ -114,4 +114,9 @@ hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad
 hi User3 ctermfg=236 ctermbg=236 guibg=#303030 guifg=#303030
 hi User4 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e
 
-
+" vim-signify settings
+set updatetime=100
+highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
+highlight SignifySignAdd    ctermfg=green  guifg=#00ff00 cterm=NONE gui=NONE
+highlight SignifySignDelete ctermfg=red    guifg=#ff0000 cterm=NONE gui=NONE
+highlight SignifySignChange ctermfg=yellow guifg=#ffff00 cterm=NONE gui=NONE
