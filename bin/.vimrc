@@ -58,7 +58,7 @@ noremap <Down> :echo "Blasphemy! Stop using the arrow keys!"<CR>j
 noremap <Left> :echo "Blasphemy! Stop using the arrow keys!"<CR>h
 noremap <Right> :echo "Blasphemy! Stop using the arrow keys!"<CR>l
 
-noremap <Tab> :NERDTreeToggle<CR>
+noremap <Tab> :NERDTreeToggle<CR> :TagbarToggle<CR>
 
 au VimEnter * RainbowParentheses
 let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
@@ -113,3 +113,5 @@ hi User1 ctermfg=007 ctermbg=239 guibg=#4e4e4e guifg=#adadad
 hi User2 ctermfg=007 ctermbg=236 guibg=#303030 guifg=#adadad
 hi User3 ctermfg=236 ctermbg=236 guibg=#303030 guifg=#303030
 hi User4 ctermfg=239 ctermbg=239 guibg=#4e4e4e guifg=#4e4e4e
+
+
