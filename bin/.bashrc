@@ -1,5 +1,7 @@
 # bashrc by Joris Hartog
 
+export PATH="$HOME/bin:$PATH"
+
 # Only execute this file if it's an interactive shell
 [ -z "$PS1" ] && return
 
@@ -154,7 +156,11 @@ function generate_prompt() {
   BLUE="\[\033[0;34m\]"
   NC="\[\033[m\]"
 
-  PROMPT="${DARK_GRAY}[\u@\h ${LIGHT_GRAY}\W${DARK_GRAY}]${RED}\$(parse_git_branch)${NC}"
+  if [ "${PYCHARM}" == "1" ]; then
+    PROMPT="${LIGHT_GRAY}[\u@\h \W]${RED}\$(parse_git_branch)${NC}"
+  else
+    PROMPT="${DARK_GRAY}[\u@\h ${LIGHT_GRAY}\W${DARK_GRAY}]${RED}\$(parse_git_branch)${NC}"
+  fi
 
   if [ "${EXITSTATUS}" -eq 0 ]; then
     PS1="${PROMPT}${GREEN}\$ ${NC}"
@@ -168,3 +174,10 @@ PROMPT_COMMAND=generate_prompt
 
 # Source z
 source ~/bin/z.sh
+
+# Docker compose alias
+alias docker-arch-ps='for i in `docker ps --format "{{.Image}}"` ; do docker image inspect $i --format "$i -> {{.Architecture}} : {{.Os}}" ;done'
+alias dc="docker compose"
+
+# Poetry!
+source ~/.poetry/env

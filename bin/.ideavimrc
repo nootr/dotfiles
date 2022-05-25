@@ -1,0 +1,9 @@
+" Dus toch een IDE.. noice
+
+inoremap jj <esc>
+
+noremap <Up> :echo "Blasphemy! Stop using the arrow keys!"<CR>k
+noremap <Down> :echo "Blasphemy! Stop using the arrow keys!"<CR>j
+noremap <Left> :echo "Blasphemy! Stop using the arrow keys!"<CR>h
+noremap <Right> :echo "Blasphemy! Stop using the arrow keys!"<CR>l
+
