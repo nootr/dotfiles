@@ -3,6 +3,7 @@
 " Some (custom or default) keybindings:
 "
 " :cd ... | Change working directory
+" :Cd ... | Change working directory and update virtual environment path
 " :e ...  | Edit (new) file
 "         |
 " `       | Open file tree sidebar (NERDTree plugin)
@@ -21,8 +22,8 @@
 " ;w o    | Open current buffer full-screen
 " ;w ;w   | Move to next window
 "         |
-" ;t      | Open a terminal to the right
-" ;T      | Open a terminal down
+" ;t      | Open a terminal down
+" ;T      | Open a terminal to the right
 "         |
 " :hide   | Close window without closing buffer
 " :bd     | Close window and buffer
@@ -74,6 +75,19 @@ function! Pywrap()
   set colorcolumn=89
 endfunction
 
+function! Cd(dir)
+  " cd into a certain folder and update the PATH accordingly
+  execute(":cd " . a:dir)
+  let pwd = trim(execute(":pwd"))
+  if isdirectory(pwd . "/.venv")
+    let $VIRTUAL_ENV = pwd . "/.venv/"
+  elseif isdirectory(pwd . "/venv")
+    let $VIRTUAL_ENV = pwd . "/venv/"
+  endif
+endfunction
+
+:command! -complete=file_in_path -nargs=1 Cd :call Cd(<q-args>)
+
 set hlsearch
 set smartcase
 set ignorecase
@@ -108,8 +122,8 @@ let mapleader = ";"
 nnoremap <Leader>w <C-w>
 tnoremap <Leader>w <C-w>
 
-nnoremap <Leader>t :below vertical terminal<CR>
-nnoremap <Leader>T :below terminal<CR>
+nnoremap <Leader>t :below terminal<CR>
+nnoremap <Leader>T :below vertical terminal<CR>
 
 
 au VimEnter * RainbowParentheses
