@@ -46,6 +46,7 @@ set undolevels=1000
 set backspace=indent,eol,start
 
 set clipboard=unnamed
+
 nnoremap d "xd
 vnoremap d "xd
 nnoremap c "xc
@@ -61,7 +62,14 @@ noremap <Right> :echo "Blasphemy! Stop using the arrow keys!"<CR>l
 noremap ` :NERDTreeToggle<CR>
 noremap <Tab> :TagbarToggle<CR>
 
-let mapleader = "J"
+let mapleader = ";"
+
+nnoremap <Leader>w <C-w>
+tnoremap <Leader>w <C-w>
+
+nnoremap <Leader>t :below vertical terminal<CR>
+tnoremap <Leader>t :below vertical terminal<CR>
+
 
 au VimEnter * RainbowParentheses
 let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
