@@ -1,8 +1,49 @@
-" Wat zit je in mijn vimrc te kijken?!
-" xoxo jhartog
+"""""""""""""""""""""""""""""" My Vim configuration """""""""""""""""""""""""""
+"
+" Some (custom or default) keybindings:
+"
+" :cd ... | Change working directory
+" :e ...  | Edit (new) file
+"         |
+" `       | Open file tree sidebar (NERDTree plugin)
+" <tab>   | Open file structure explorer (tagbar plugin)
+"         |
+" jj      | Enter normal mode
+" ;       | Leader
+"         |
+" ;w j    | Move to window down
+" ;w k    | Move to window up
+" ;w h    | Move to window left
+" ;w l    | Move to window right
+"         |
+" ;w s    | Split horizontal
+" ;w v    | Split vertical
+" ;w o    | Open current buffer full-screen
+" ;w ;w   | Move to next window
+"         |
+" ;t      | Open a terminal to the right
+" ;T      | Open a terminal down
+"         |
+" :hide   | Close window without closing buffer
+" :bd     | Close window and buffer
+" :bn     | Show next buffer
+" :bp     | Show previous buffer
+" :ls     | List buffers
+" :b N    | Show buffer N
+"         |
+" ;w >    | Increase window to the right by 1 column
+" ;w N >  | Increase window to the right by N columns
+" ;w <    | Increase window to the left by 1 column
+" ;w N <  | Increase window to the left by N columns
+" ;w +    | Increase window height by 1 row
+" ;w N +  | Increase window height by N rows
+" ;w -    | Decrease window height by 1 row
+" ;w N -  | Decrease window height by N rows
 
 " Use pathogen for Jedi VIM
 execute pathogen#infect()
+
+set splitbelow
 
 syntax on
 filetype plugin indent on
@@ -68,7 +109,7 @@ nnoremap <Leader>w <C-w>
 tnoremap <Leader>w <C-w>
 
 nnoremap <Leader>t :below vertical terminal<CR>
-tnoremap <Leader>t :below vertical terminal<CR>
+nnoremap <Leader>T :below terminal<CR>
 
 
 au VimEnter * RainbowParentheses
