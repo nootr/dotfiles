@@ -6,8 +6,8 @@
 " :Cd ... | Change working directory and update virtual environment path
 " :e ...  | Edit (new) file
 "         |
-" `       | Open file tree sidebar (NERDTree plugin)
-" <tab>   | Open file structure explorer (tagbar plugin)
+" <tab>   | Open file tree sidebar (NERDTree plugin)
+" `       | Open file structure explorer (tagbar plugin)
 "         |
 " jj      | Enter normal mode
 " ;       | Leader
@@ -76,7 +76,7 @@ function! Pywrap()
 endfunction
 
 function! Cd(dir)
-  " cd into a certain folder and update the PATH accordingly
+  " cd into a certain folder and update VIRTUAL_ENV accordingly
   execute(":cd " . a:dir)
   let pwd = trim(execute(":pwd"))
   if isdirectory(pwd . "/.venv")
@@ -114,8 +114,8 @@ noremap <Down> :echo "Blasphemy! Stop using the arrow keys!"<CR>j
 noremap <Left> :echo "Blasphemy! Stop using the arrow keys!"<CR>h
 noremap <Right> :echo "Blasphemy! Stop using the arrow keys!"<CR>l
 
-noremap ` :NERDTreeToggle<CR>
-noremap <Tab> :TagbarToggle<CR>
+noremap <Tab> :NERDTreeToggle<CR>
+noremap ` :TagbarToggle<CR>
 
 let mapleader = ";"
 
