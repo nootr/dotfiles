@@ -60,39 +60,6 @@ function cdtmp() {
   cd $(mktemp -d)
 }
 
-# Work-related stuff
-function doei() {
-  if [ -z "$1" ]; then
-    echo "Usage: doei <IP>"
-  else
-    sudo fail2ban-client set recidive banip $1
-  fi
-}
-
-function check_backup() {
-  curl -k --cert ~/.mcollective.d/credentials/certs/B361C7A1_cert.pem \
-    --key ~/.mcollective.d/credentials/private_keys/B361C7A1_key.pem \
-    https://styx.prod.hostnetbv.nl/check/$1
-  echo
-}
-
-function check_parentnode() {
-  pqh factsFor -c $1 parentnode
-  echo
-}
-
-function _known_hosts_complete() {
-  local cur
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
-  _suggestions=$(awk '{ print $1 }' ~/.ssh/known_hosts)
-  COMPREPLY=( $(compgen -W "${_suggestions}" -- ${cur}) )
-
-  return 0
-}
-
-complete -F _known_hosts_complete ssh check_backup check_parentnode
-
 # Git status functions for prompt
 function parse_git_branch() {
     BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
@@ -181,3 +148,6 @@ alias dc="docker compose"
 
 # Poetry!
 source ~/.poetry/env
+
+# Python 3.10!
+export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"
