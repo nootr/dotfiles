@@ -56,7 +56,10 @@ match ExtraWhitespace /\s\+$/
 autocmd BufRead,BufNewFile *.ilo set filetype=ilo
 autocmd BufRead,BufNewFile *.py call Pywrap()
 autocmd BufWritePre *.py execute ':Black'
-autocmd BufWritePost *.py call flake8#Flake8()
+
+if filereadable("./.flake8")
+    autocmd BufWritePost *.py call flake8#Flake8()
+endif
 
 set list
 set listchars=tab:>-
