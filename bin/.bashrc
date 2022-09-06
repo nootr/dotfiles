@@ -151,3 +151,8 @@ source ~/.poetry/env
 
 # Python 3.10!
 export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"
+
+# Rust
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
