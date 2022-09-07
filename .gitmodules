@@ -7,3 +7,6 @@
 [submodule "bin/.vim/pack/vendor/start/nerdtree"]
 	path = bin/.vim/pack/vendor/start/nerdtree
 	url = https://github.com/preservim/nerdtree.git
+[submodule "bin/.vim/pack/plugins/start/rust.vim"]
+	path = bin/.vim/pack/plugins/start/rust.vim
+	url = https://github.com/rust-lang/rust.vim
