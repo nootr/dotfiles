@@ -2,51 +2,54 @@
 "
 " Some (custom or default) keybindings:
 "
-" :cd ... | Change working directory
-" :Cd ... | Change working directory and update virtual environment path
-" :e ...  | Edit (new) file
-"         |
-" <tab>   | Open file tree sidebar (NERDTree plugin)
-" `       | Open file structure explorer (tagbar plugin)
-"         |
-" jj      | Enter normal mode
-" ;       | Leader
-"         |
-" ;w j    | Move to window down
-" ;w k    | Move to window up
-" ;w h    | Move to window left
-" ;w l    | Move to window right
-"         |
-" ;w s    | Split horizontal
-" ;w v    | Split vertical
-" ;w o    | Open current buffer full-screen
-" ;w ;w   | Move to next window
-"         |
-" ;t      | Open a terminal down
-" ;T      | Open a terminal to the right
-"         |
-" :hide   | Close window without closing buffer
-" :bd     | Close window and buffer
-" :bn     | Show next buffer
-" :bp     | Show previous buffer
-" :ls     | List buffers
-" :b N    | Show buffer N
-"         |
-" ;w >    | Increase window to the right by 1 column
-" ;w N >  | Increase window to the right by N columns
-" ;w <    | Increase window to the left by 1 column
-" ;w N <  | Increase window to the left by N columns
-" ;w +    | Increase window height by 1 row
-" ;w N +  | Increase window height by N rows
-" ;w -    | Decrease window height by 1 row
-" ;w N -  | Decrease window height by N rows
+" s<char><char>  | Jump to the next occurence of the given set of characters.
+"                | Press `s` again to continue to the next occurence.
+"                |
+" :cd ...        | Change working directory
+" :Cd ...        | Change working directory and update virtual environment path
+" :e ...         | Edit (new) file
+"                |
+" <tab>          | Open file tree sidebar (NERDTree plugin)
+" `              | Open file structure explorer (tagbar plugin)
+"                |
+" jj             | Enter normal mode
+" ;              | Leader
+"                |
+" ;w j           | Move to window down
+" ;w k           | Move to window up
+" ;w h           | Move to window left
+" ;w l           | Move to window right
+"                |
+" ;w s           | Split horizontal
+" ;w v           | Split vertical
+" ;w o           | Open current buffer full-screen
+" ;w ;w          | Move to next window
+"                |
+" ;t             | Open a terminal down
+" ;T             | Open a terminal to the right
+"                |
+" :hide          | Close window without closing buffer
+" :bd            | Close window and buffer
+" :bn            | Show next buffer
+" :bp            | Show previous buffer
+" :ls            | List buffers
+" :b N           | Show buffer N
+"                |
+" ;w >           | Increase window to the right by 1 column
+" ;w N >         | Increase window to the right by N columns
+" ;w <           | Increase window to the left by 1 column
+" ;w N <         | Increase window to the left by N columns
+" ;w +           | Increase window height by 1 row
+" ;w N +         | Increase window height by N rows
+" ;w -           | Decrease window height by 1 row
+" ;w N -         | Decrease window height by N rows
 
 " Use pathogen for Jedi VIM
 execute pathogen#infect()
 
 set splitbelow
 
-syntax on
+syntax enable
 filetype plugin indent on
 highlight LineNr          ctermfg=DarkGrey
 highlight ColorColumn     ctermbg=235      guibg=#2c2d27
@@ -56,6 +59,8 @@ match ExtraWhitespace /\s\+$/
 autocmd BufRead,BufNewFile *.ilo set filetype=ilo
 autocmd BufRead,BufNewFile *.py call Pywrap()
 autocmd BufWritePre *.py execute ':Black'
+
+let g:rustfmt_autosave = 1
 
 if filereadable("./.flake8")
     autocmd BufWritePost *.py call flake8#Flake8()
@@ -189,3 +194,6 @@ highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE
 highlight SignifySignAdd    ctermfg=green  guifg=#00ff00 cterm=NONE gui=NONE
 highlight SignifySignDelete ctermfg=red    guifg=#ff0000 cterm=NONE gui=NONE
 highlight SignifySignChange ctermfg=yellow guifg=#ffff00 cterm=NONE gui=NONE
+
+" Sneak
+let g:sneak#s_next = 1
