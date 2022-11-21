@@ -8,3 +8,5 @@
 	commend = commit --amend --no-edit
 [pull]
 	rebase = true
+[merge]
+	tool = vimdiff
