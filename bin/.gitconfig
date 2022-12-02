@@ -1,12 +1,15 @@
 [init]
-	defaultBranch = main
+  defaultBranch = main
 [user]
-	name = Joris Hartog
-	email = jorishartog@hotmail.com
+  name = Joris Hartog
+  email = jorishartog@hotmail.com
 [alias]
-	please = push --force-with-lease
-	commend = commit --amend --no-edit
+  please = push --force-with-lease
+  commend = commit --amend --no-edit
 [pull]
-	rebase = true
+  rebase = true
 [merge]
-	tool = vimdiff
+  tool = pycharm
+[mergetool "pycharm"]
+  cmd = charm merge \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
+  trustExitCode = true
