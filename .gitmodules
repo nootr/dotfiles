@@ -10,3 +10,6 @@
 [submodule "bin/.vim/pack/plugins/start/rust.vim"]
 	path = bin/.vim/pack/plugins/start/rust.vim
 	url = https://github.com/rust-lang/rust.vim
+[submodule "bin/.config/nvim"]
+	path = bin/.config/nvim
+	url = git@github.com:nootr/init.lua.git
