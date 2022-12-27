@@ -6,7 +6,8 @@ export PATH="$HOME/bin:$PATH"
 [ -z "$PS1" ] && return
 
 # Set preferred editor
-export EDITOR=vim
+export EDITOR=nvim
+alias vim=$EDITOR
 
 # Use `thefuck` if installed
 command -v thefuck > /dev/null && eval "$(thefuck --alias)"
