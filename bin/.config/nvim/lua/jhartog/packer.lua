@@ -10,6 +10,12 @@ return require('packer').startup(function(use)
         requires = { {'nvim-lua/plenary.nvim'} }
     })
 
+    -- 🚦 lualine - A statusline
+    use {
+        'nvim-lualine/lualine.nvim',
+        requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    }
+
     -- 📻 gruvbox baby - A color scheme
     use "luisiacc/gruvbox-baby"
 
