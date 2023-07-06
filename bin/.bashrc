@@ -157,3 +157,8 @@ export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"
 if [ -f "$HOME/.cargo/env" ]; then
   . "$HOME/.cargo/env"
 fi
+
+# Mac M1 issue
+# https://github.com/celery/celery/issues/7324
+# https://stackoverflow.com/questions/50168647/multiprocessing-causes-python-to-crash-and-gives-an-error-may-have-been-in-progr
+OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
