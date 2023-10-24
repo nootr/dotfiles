@@ -149,6 +149,7 @@ alias dc="docker compose"
 
 # Poetry!
 source ~/.poetry/env
+export PATH="/Users/jhartog/.local/bin:$PATH"
 
 # Python 3.10!
 export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"
@@ -162,3 +163,10 @@ fi
 # https://github.com/celery/celery/issues/7324
 # https://stackoverflow.com/questions/50168647/multiprocessing-causes-python-to-crash-and-gives-an-error-may-have-been-in-progr
 OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH=$BUN_INSTALL/bin:$PATH
+
+# Go
+export PATH="$HOME/go/bin:$PATH"
