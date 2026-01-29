@@ -289,9 +289,26 @@
   (my/style-tab-bar))
 
 ;;;; 15. Minimal mode line
+(defun my/mode-line-evil-state ()
+  "Return single letter for current evil state."
+  (if (bound-and-true-p evil-local-mode)
+      (cond
+       ((evil-normal-state-p) "N")
+       ((evil-insert-state-p) "I")
+       ((evil-visual-state-p) "V")
+       ((evil-replace-state-p) "R")
+       ((evil-operator-state-p) "O")
+       ((evil-motion-state-p) "M")
+       ((evil-emacs-state-p) "E")
+       (t "-"))
+    "-"))
+
 (setq-default mode-line-format
               '(" "
-                (:eval (if (mode-line-window-selected-p) "● " "  "))
+                (:eval (if (mode-line-window-selected-p)
+                           (concat (my/mode-line-evil-state) " ")
+                         "  "))
+                (:eval (if (buffer-modified-p) "◇ " "◆ "))
                 "%b"))
 
 ;; Style mode line to match theme
