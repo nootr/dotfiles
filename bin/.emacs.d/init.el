@@ -41,6 +41,10 @@
 (dolist (mode '(vterm-mode-hook term-mode-hook eshell-mode-hook shell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
+;; Highlight trailing whitespace
+(dolist (mode '(prog-mode-hook text-mode-hook))
+  (add-hook mode (lambda () (setq show-trailing-whitespace t))))
+
 ;; Auto-revert files changed on disk
 (global-auto-revert-mode 1)
 
