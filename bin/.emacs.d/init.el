@@ -65,14 +65,45 @@
     (set-face-attribute 'default nil :family font :height 140)
     (set-face-attribute 'fixed-pitch nil :family font :height 140)))
 
-;;;; 3. Theme
+;;;; 3. Config auto-reload
+(require 'filenotify)
+
+(defvar my/config-watch-descriptor nil)
+(defvar my/config-reload-timer nil)
+
+(defun my/reload-init ()
+  "Reload init.el with error handling."
+  (condition-case err
+      (progn
+        (load user-init-file nil t)
+        (message "Config reloaded"))
+    (error (message "Config reload failed: %s" (error-message-string err)))))
+
+(defun my/config-file-changed (event)
+  "Handle config file change EVENT with debouncing."
+  (when (eq (nth 1 event) 'changed)
+    (when my/config-reload-timer
+      (cancel-timer my/config-reload-timer))
+    (setq my/config-reload-timer
+          (run-at-time 0.5 nil #'my/reload-init))))
+
+(defun my/start-config-watcher ()
+  "Start watching init.el for changes."
+  (when my/config-watch-descriptor
+    (file-notify-rm-watch my/config-watch-descriptor))
+  (setq my/config-watch-descriptor
+        (file-notify-add-watch user-init-file '(change) #'my/config-file-changed)))
+
+(my/start-config-watcher)
+
+;;;; 4. Theme
 (use-package ef-themes
   :config
   (load-theme 'ef-autumn t)
   ;; Lighten background so black terminal text is visible
   (set-face-attribute 'default nil :background "#1f1c14"))
 
-;;;; 4. Evil mode
+;;;; 5. Evil mode
 (use-package evil
   :init
   (setq evil-want-integration t
@@ -124,12 +155,12 @@
   (evil-define-key 'normal dirvish-mode-map (kbd "M-s f") #'consult-find)
   (evil-define-key 'normal dirvish-mode-map (kbd "M-s r") #'consult-ripgrep))
 
-;;;; 5. Which-key
+;;;; 6. Which-key
 (use-package which-key
   :config
   (which-key-mode 1))
 
-;;;; 6. Completion stack
+;;;; 7. Completion stack
 (use-package vertico
   :config
   (vertico-mode 1))
@@ -148,7 +179,7 @@
          ("M-s f" . consult-find)
          ("M-s r" . consult-ripgrep)))
 
-;;;; 7. Magit (git interface)
+;;;; 8. Magit (git interface)
 (defun magit-status-in-new-tab ()
   "Open magit-status in a new tab."
   (interactive)
@@ -160,7 +191,7 @@
   :config
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
 
-;;;; 8. Dirvish (better dired)
+;;;; 9. Dirvish (better dired)
 (use-package dirvish
   :init
   (dirvish-override-dired-mode)
@@ -168,7 +199,7 @@
   (setq dirvish-attributes '(file-size collapse subtree-state vc-state git-msg))
   (setq dirvish-hide-details t))
 
-;;;; 9. Diff-hl (git diff in fringe)
+;;;; 10. Diff-hl (git diff in fringe)
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
          (text-mode . diff-hl-mode)
@@ -179,12 +210,12 @@
     (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
     (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
-;;;; 10. Beacon (cursor flash on scroll)
+;;;; 11. Beacon (cursor flash on scroll)
 (use-package beacon
   :config
   (beacon-mode 1))
 
-;;;; 11. Vterm
+;;;; 12. Vterm
 (use-package vterm
   :commands vterm
   :hook (vterm-mode . (lambda () (display-line-numbers-mode -1))))
@@ -225,10 +256,10 @@
   (define-key evil-window-map "t" #'my/vterm-split-below)
   (define-key evil-window-map "T" #'my/vterm-split-right))
 
-;;;; 12. Project.el (built-in)
+;;;; 13. Project.el (built-in)
 ;; No extra config needed; C-x p prefix works out of the box.
 
-;;;; 13. Tab-bar-mode
+;;;; 14. Tab-bar-mode
 (setq tab-bar-show t
       tab-bar-close-button-show nil
       tab-bar-new-button-show nil
@@ -255,7 +286,7 @@
   (add-hook 'ef-themes-post-load-hook #'my/style-tab-bar)
   (my/style-tab-bar))
 
-;;;; 14. Minimal mode line
+;;;; 15. Minimal mode line
 (setq-default mode-line-format
               '(" "
                 (:eval (if (mode-line-window-selected-p) "● " "  "))
@@ -277,7 +308,7 @@
   (add-hook 'ef-themes-post-load-hook #'my/style-mode-line)
   (my/style-mode-line))
 
-;;;; 15. Project workspace function
+;;;; 16. Project workspace function
 (require 'project)
 
 (defun my/vterm-send-after-init (buffer command)
@@ -335,7 +366,7 @@ Code (top-left), Term (bottom-left), Claude (right)."
 
 (global-set-key (kbd "C-x p w") #'my/open-project-workspace)
 
-;;;; 16. Language modes
+;;;; 17. Language modes
 
 ;; Python (built-in, just ensure indent)
 (setq python-indent-offset 4)
@@ -356,7 +387,7 @@ Code (top-left), Term (bottom-left), Claude (right)."
 (setq css-indent-offset 2)
 (setq js-indent-level 2)
 
-;;;; 17. Terminal config
+;;;; 18. Terminal config
 ;; Kill vterm buffer when shell exits
 (setq vterm-kill-buffer-on-exit t)
 
@@ -395,7 +426,7 @@ Code (top-left), Term (bottom-left), Claude (right)."
   (define-key vterm-mode-map (kbd "M-v") #'vterm-yank)
   (define-key vterm-mode-map (kbd "s-v") #'vterm-yank))
 
-;;;; 18. Startup and help screens
+;;;; 19. Startup and help screens
 (defun my/startup-screen ()
   "Display a minimal welcome screen."
   (let ((buf (get-buffer-create "*welcome*")))
