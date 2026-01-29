@@ -179,7 +179,12 @@
     (add-hook 'magit-pre-refresh-hook #'diff-hl-magit-pre-refresh)
     (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
-;;;; 10. Vterm
+;;;; 10. Beacon (cursor flash on scroll)
+(use-package beacon
+  :config
+  (beacon-mode 1))
+
+;;;; 11. Vterm
 (use-package vterm
   :commands vterm
   :hook (vterm-mode . (lambda () (display-line-numbers-mode -1))))
@@ -220,10 +225,10 @@
   (define-key evil-window-map "t" #'my/vterm-split-below)
   (define-key evil-window-map "T" #'my/vterm-split-right))
 
-;;;; 11. Project.el (built-in)
+;;;; 12. Project.el (built-in)
 ;; No extra config needed; C-x p prefix works out of the box.
 
-;;;; 12. Tab-bar-mode
+;;;; 13. Tab-bar-mode
 (setq tab-bar-show t
       tab-bar-close-button-show nil
       tab-bar-new-button-show nil
@@ -250,7 +255,7 @@
   (add-hook 'ef-themes-post-load-hook #'my/style-tab-bar)
   (my/style-tab-bar))
 
-;;;; 13. Minimal mode line
+;;;; 14. Minimal mode line
 (setq-default mode-line-format
               '(" "
                 (:eval (if (mode-line-window-selected-p) "● " "  "))
@@ -272,7 +277,7 @@
   (add-hook 'ef-themes-post-load-hook #'my/style-mode-line)
   (my/style-mode-line))
 
-;;;; 14. Project workspace function
+;;;; 15. Project workspace function
 (require 'project)
 
 (defun my/vterm-send-after-init (buffer command)
@@ -330,7 +335,7 @@ Code (top-left), Term (bottom-left), Claude (right)."
 
 (global-set-key (kbd "C-x p w") #'my/open-project-workspace)
 
-;;;; 15. Language modes
+;;;; 16. Language modes
 
 ;; Python (built-in, just ensure indent)
 (setq python-indent-offset 4)
@@ -351,7 +356,7 @@ Code (top-left), Term (bottom-left), Claude (right)."
 (setq css-indent-offset 2)
 (setq js-indent-level 2)
 
-;;;; 16. Terminal config
+;;;; 17. Terminal config
 ;; Kill vterm buffer when shell exits
 (setq vterm-kill-buffer-on-exit t)
 
@@ -390,7 +395,7 @@ Code (top-left), Term (bottom-left), Claude (right)."
   (define-key vterm-mode-map (kbd "M-v") #'vterm-yank)
   (define-key vterm-mode-map (kbd "s-v") #'vterm-yank))
 
-;;;; 17. Startup and help screens
+;;;; 18. Startup and help screens
 (defun my/startup-screen ()
   "Display a minimal welcome screen."
   (let ((buf (get-buffer-create "*welcome*")))
