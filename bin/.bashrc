@@ -117,7 +117,7 @@ function lolbash() {
 # Generate bash prompt
 function generate_prompt() {
   EXITSTATUS="$?"
-  DARK_GRAY="\[\033[1;30m\]"
+  WARM_ORANGE="\[\033[38;5;130m\]"
   LIGHT_GRAY="\[\033[0;37m\]"
   RED="\[\033[0;31m\]"
   GREEN="\[\033[0;32m\]"
@@ -127,7 +127,7 @@ function generate_prompt() {
   if [ "${PYCHARM}" == "1" ]; then
     PROMPT="${LIGHT_GRAY}[\u@\h \W]${RED}\$(parse_git_branch)${NC}"
   else
-    PROMPT="${DARK_GRAY}[\u@\h ${LIGHT_GRAY}\W${DARK_GRAY}]${RED}\$(parse_git_branch)${NC}"
+    PROMPT="${WARM_ORANGE}[\u@\h ${LIGHT_GRAY}\W${WARM_ORANGE}]${RED}\$(parse_git_branch)${NC}"
   fi
 
   if [ "${EXITSTATUS}" -eq 0 ]; then
