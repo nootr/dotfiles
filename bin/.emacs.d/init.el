@@ -61,16 +61,12 @@
 (electric-pair-mode 1)
 (add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode -1)))
 
-;; Font (SF Mono preferred, then Menlo, DejaVu Sans Mono as fallback)
-(let* ((fonts (font-family-list))
-       (font (cond
-              ((member "SF Mono" fonts) "SF Mono")
-              ((member "Menlo" fonts) "Menlo")
-              ((member "DejaVu Sans Mono" fonts) "DejaVu Sans Mono")
-              (t nil))))
-  (when font
-    (set-face-attribute 'default nil :family font :height 140)
-    (set-face-attribute 'fixed-pitch nil :family font :height 140)))
+;; Font (JetBrains Mono required)
+(if (member "JetBrains Mono" (font-family-list))
+    (progn
+      (set-face-attribute 'default nil :family "JetBrains Mono" :height 140)
+      (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono" :height 140))
+  (error "JetBrains Mono font not found. Install with: brew install --cask font-jetbrains-mono"))
 
 ;;;; 3. Config auto-reload
 (require 'filenotify)
