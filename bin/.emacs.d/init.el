@@ -61,9 +61,10 @@
 (electric-pair-mode 1)
 (add-hook 'minibuffer-setup-hook (lambda () (electric-pair-local-mode -1)))
 
-;; Font (Menlo on macOS, DejaVu Sans Mono as fallback)
+;; Font (SF Mono preferred, then Menlo, DejaVu Sans Mono as fallback)
 (let* ((fonts (font-family-list))
        (font (cond
+              ((member "SF Mono" fonts) "SF Mono")
               ((member "Menlo" fonts) "Menlo")
               ((member "DejaVu Sans Mono" fonts) "DejaVu Sans Mono")
               (t nil))))
