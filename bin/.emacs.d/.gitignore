@@ -1,34 +1,5 @@
-# Packages
-elpa/
-
-# Native compilation cache
-eln-cache/
-
-# Other caches
-url/
-auto-save-list/
-.cache/
-
-# State files
-recentf
-savehist
-places
-bookmarks
-history
-transient/
-projectile-bookmarks.eld
-eshell/
-projects
-tramp
-
-# Backup and auto-save
-*~
-\#*\#
-.\#*
-*.swp
-
-# Custom settings
-custom.el
-
-# Local overrides
-local.el
+*
+!.gitignore
+!README.md
+!early-init.el
+!init.el
