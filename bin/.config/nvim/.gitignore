@@ -1,0 +1,8 @@
+# Vim swap files
+*.swp
+
+# Plugin folder is maintained by the package manager
+/plugin/
+
+# Annoying MacOS Finder garbage
+.DS_Store
