@@ -38,6 +38,8 @@
 ;; Line numbers
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
+(dolist (mode '(vterm-mode-hook term-mode-hook eshell-mode-hook shell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
 ;; Auto-revert files changed on disk
 (global-auto-revert-mode 1)
@@ -217,8 +219,7 @@
 
 ;;;; 12. Vterm
 (use-package vterm
-  :commands vterm
-  :hook (vterm-mode . (lambda () (display-line-numbers-mode -1))))
+  :commands vterm)
 
 (defun my/vterm-in-new-tab ()
   "Open a terminal in a new tab."
