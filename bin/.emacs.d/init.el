@@ -226,7 +226,7 @@
   "Open a terminal in a new tab."
   (interactive)
   (tab-bar-new-tab)
-  (vterm))
+  (vterm (generate-new-buffer-name "*vterm*")))
 
 (defun my/org-in-new-tab ()
   "Open an org scratch buffer in a new tab."
@@ -241,14 +241,14 @@
   (interactive)
   (split-window-right)
   (other-window 1)
-  (vterm))
+  (vterm (generate-new-buffer-name "*vterm*")))
 
 (defun my/vterm-split-below ()
   "Split window below and open terminal."
   (interactive)
   (split-window-below)
   (other-window 1)
-  (vterm))
+  (vterm (generate-new-buffer-name "*vterm*")))
 
 (global-set-key (kbd "C-x t t") #'my/vterm-in-new-tab)
 (global-set-key (kbd "C-x t o") #'my/org-in-new-tab)
