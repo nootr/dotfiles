@@ -150,13 +150,9 @@
 
 ;; Ensure ; and search work in dired/dirvish
 (with-eval-after-load 'dired
-  (evil-define-key '(normal visual motion) dired-mode-map ";" #'my/semicolon-ctrl)
-  (evil-define-key 'normal dired-mode-map (kbd "M-s f") #'consult-find)
-  (evil-define-key 'normal dired-mode-map (kbd "M-s r") #'consult-ripgrep))
+  (evil-define-key '(normal visual motion) dired-mode-map ";" #'my/semicolon-ctrl))
 (with-eval-after-load 'dirvish
-  (evil-define-key '(normal visual motion) dirvish-mode-map ";" #'my/semicolon-ctrl)
-  (evil-define-key 'normal dirvish-mode-map (kbd "M-s f") #'consult-find)
-  (evil-define-key 'normal dirvish-mode-map (kbd "M-s r") #'consult-ripgrep))
+  (evil-define-key '(normal visual motion) dirvish-mode-map ";" #'my/semicolon-ctrl))
 
 ;;;; 6. Which-key
 (use-package which-key
@@ -178,9 +174,7 @@
   (marginalia-mode 1))
 
 (use-package consult
-  :bind (("C-x b" . consult-buffer)
-         ("M-s f" . consult-find)
-         ("M-s r" . consult-ripgrep)))
+  :bind (("C-x b" . consult-buffer)))
 
 ;;;; 8. Magit (git interface)
 (defun magit-status-in-new-tab ()
@@ -516,10 +510,9 @@ Windows
 Project
   ;x p w      Open project workspace
   ;x p f      Find file in project
+  ;x p g      Find text in project
   ;x g        Magit (git)
   ;x b        Switch buffer (consult)
-  M-s f       Find file by name (fuzzy)
-  M-s r       Ripgrep in project
 
 Tabs
   gt / gT     Next / previous tab
