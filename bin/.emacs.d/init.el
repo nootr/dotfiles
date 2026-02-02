@@ -435,6 +435,8 @@ Code (top-left), Term (bottom-left), Claude (right)."
 (with-eval-after-load 'vterm
   (evil-define-key 'insert vterm-mode-map (kbd "<escape>") #'my/vterm-escape-to-normal)
   (evil-define-key 'normal vterm-mode-map (kbd "<escape>") #'my/vterm-send-escape)
+  ;; Shift+Enter sends Ctrl+J (newline in Claude Code)
+  (define-key vterm-mode-map (kbd "S-<return>") (lambda () (interactive) (vterm-send-key "j" nil nil t)))
   ;; Cmd-v to paste from clipboard in vterm
   (define-key vterm-mode-map (kbd "M-v") #'vterm-yank)
   (define-key vterm-mode-map (kbd "s-v") #'vterm-yank))
