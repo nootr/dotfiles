@@ -253,7 +253,8 @@
   (define-key evil-window-map "T" #'my/vterm-split-right))
 
 ;;;; 13. Project.el (built-in)
-;; No extra config needed; C-x p prefix works out of the box.
+;; Use vertico for xref results (project-find-regexp)
+(setq xref-show-xrefs-function #'xref-show-definitions-completing-read)
 
 ;;;; 14. Tab-bar-mode
 (setq tab-bar-show t
