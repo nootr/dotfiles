@@ -443,28 +443,155 @@ Code (top-left), Term (bottom-left), Claude (right)."
   (define-key vterm-mode-map (kbd "s-v") #'vterm-yank))
 
 ;;;; 19. Startup and help screens
+
+;; Game of Life state
+(defvar my/gol-width 100)
+(defvar my/gol-height 24)
+(defvar my/gol-grid nil)
+(defvar my/gol-timer nil)
+
+(defun my/gol-init ()
+  "Initialize Game of Life grid with random cells."
+  (setq my/gol-grid (make-vector (* my/gol-width my/gol-height) 0))
+  (dotimes (i (length my/gol-grid))
+    (aset my/gol-grid i (if (< (random 100) 25) 1 0))))
+
+(defun my/gol-step ()
+  "Compute next generation (optimized)."
+  (let* ((w my/gol-width)
+         (h my/gol-height)
+         (size (* w h))
+         (old my/gol-grid)
+         (new (make-vector size 0)))
+    (dotimes (y h)
+      (let* ((y-1 (mod (1- y) h))
+             (y+1 (mod (1+ y) h))
+             (row (* y w))
+             (row-1 (* y-1 w))
+             (row+1 (* y+1 w)))
+        (dotimes (x w)
+          (let* ((x-1 (mod (1- x) w))
+                 (x+1 (mod (1+ x) w))
+                 (neighbors (+ (aref old (+ row-1 x-1)) (aref old (+ row-1 x)) (aref old (+ row-1 x+1))
+                               (aref old (+ row x-1))                          (aref old (+ row x+1))
+                               (aref old (+ row+1 x-1)) (aref old (+ row+1 x)) (aref old (+ row+1 x+1))))
+                 (alive (aref old (+ row x))))
+            (aset new (+ row x)
+                  (if (or (= neighbors 3) (and (= alive 1) (= neighbors 2))) 1 0))))))
+    (setq my/gol-grid new)))
+
+(defconst my/gol-halfblocks
+  (vector " " "▄" "▀" "█")
+  "Half-block characters indexed by 2-bit pattern: TOP*2 + BOTTOM.")
+
+(defun my/gol-render ()
+  "Render Game of Life grid as list of strings.
+Uses half-block characters: each char shows 2 vertical cells."
+  (let ((lines '())
+        (border-width my/gol-width)
+        (figure-face '(:foreground "#ff79c6"))
+        (w my/gol-width)
+        (h my/gol-height))
+    ;; Stick figure sitting on top-right edge
+    (push (concat (make-string border-width ?\s)
+                  (propertize "o  Hi!" 'face figure-face)) lines)
+    (push (concat (make-string border-width ?\s)
+                  (propertize "|┘" 'face figure-face)) lines)
+    ;; Top border with gap for legs
+    (push (concat "┌" (make-string (- border-width 1) ?─)
+                  (propertize "└┐┐" 'face figure-face)) lines)
+    ;; Grid: 2 rows per line, 1 col per char
+    (let ((y 0))
+      (while (< y h)
+        (let ((line "│")
+              (row0 (* y w))
+              (row1 (* (1+ y) w)))
+          (dotimes (x w)
+            (let* ((top (aref my/gol-grid (+ row0 x)))
+                   (bot (if (< (1+ y) h) (aref my/gol-grid (+ row1 x)) 0))
+                   (idx (+ (* top 2) bot)))
+              (setq line (concat line (aref my/gol-halfblocks idx)))))
+          (setq line (concat line "│"))
+          (push line lines))
+        (setq y (+ y 2))))
+    (let* ((hint "[spacebar: reset]")
+           (padding (/ (- border-width (length hint)) 2)))
+      (push (concat "└" (make-string padding ?─) hint (make-string (- border-width (length hint) padding) ?─) "┘") lines))
+    (nreverse lines)))
+
+(defun my/gol-update-display ()
+  "Update the welcome screen with new Game of Life state.
+Only runs when welcome buffer is visible to save battery."
+  (when-let ((buf (get-buffer "*welcome*")))
+    (when (get-buffer-window buf t)
+      (with-current-buffer buf
+        (when (eq major-mode 'fundamental-mode)
+          (my/gol-step)
+          (my/startup-screen-render))))))
+
+(defun my/startup-screen-render ()
+  "Render the welcome screen content."
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (let* ((gol-lines (my/gol-render))
+           (help-box '("┌────────────────────┐"
+                       "│ Help      ;x ?     │"
+                       "│ Project   ;x p w   │"
+                       "│ Terminal  ;x t t   │"
+                       "└────────────────────┘"))
+           (gol-width (+ my/gol-width 2))
+           (help-width (length (car help-box)))
+           (total-height (+ (length gol-lines) 1 (length help-box))))
+      ;; Center vertically
+      (dotimes (_ (max 0 (/ (- (window-height) total-height) 2)))
+        (insert "\n"))
+      ;; Insert Game of Life centered
+      (dolist (line gol-lines)
+        (insert (make-string (max 0 (/ (- (window-width) gol-width) 2)) ?\s))
+        (insert line "\n"))
+      ;; Spacer
+      (insert "\n")
+      ;; Insert help box centered
+      (dolist (line help-box)
+        (insert (make-string (max 0 (/ (- (window-width) help-width) 2)) ?\s))
+        (insert line "\n")))
+    (goto-char (point-min))))
+
+(defun my/gol-stop-timer ()
+  "Stop Game of Life timer when buffer is killed."
+  (when (and (string= (buffer-name) "*welcome*") my/gol-timer)
+    (cancel-timer my/gol-timer)
+    (setq my/gol-timer nil)))
+
+(add-hook 'kill-buffer-hook #'my/gol-stop-timer)
+
+(defun my/gol-reset ()
+  "Reset Game of Life with new random state."
+  (interactive)
+  (my/gol-init)
+  (my/startup-screen-render))
+
+(defvar my/welcome-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "SPC") #'my/gol-reset)
+    map)
+  "Keymap for welcome screen.")
+
+(with-eval-after-load 'evil
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "SPC") #'my/gol-reset))
+
 (defun my/startup-screen ()
-  "Display a minimal welcome screen."
+  "Display a minimal welcome screen with Game of Life."
   (let ((buf (get-buffer-create "*welcome*")))
     (with-current-buffer buf
       (read-only-mode -1)
-      (erase-buffer)
-      (let* ((box '("┌────────────────────┐"
-                    "│ Help      ;x ?     │"
-                    "│ Project   ;x p w   │"
-                    "│ Terminal  ;x t t   │"
-                    "└────────────────────┘"))
-             (box-width (length (car box)))
-             (box-height (length box)))
-        ;; Center vertically
-        (dotimes (_ (/ (- (window-height) box-height) 2))
-          (insert "\n"))
-        ;; Insert box centered horizontally
-        (dolist (line box)
-          (insert (make-string (/ (- (window-width) box-width) 2) ?\s))
-          (insert line "\n")))
-      (goto-char (point-min))
-      (read-only-mode 1))
+      (unless my/gol-grid (my/gol-init))
+      (my/startup-screen-render)
+      (read-only-mode 1)
+      (use-local-map my/welcome-mode-map)
+      ;; Start animation timer
+      (when my/gol-timer (cancel-timer my/gol-timer))
+      (setq my/gol-timer (run-with-timer 0.2 0.2 #'my/gol-update-display)))
     (switch-to-buffer buf)))
 
 (defun my/help-screen ()
