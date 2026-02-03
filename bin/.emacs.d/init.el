@@ -262,6 +262,15 @@
       tab-bar-new-button-show nil
       tab-bar-tab-hints t
       tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
+
+(defun my/tab-bar-tab-name-format (tab i)
+  "Format TAB name with index I as 'Ngt: name'."
+  (let ((current-p (eq (car tab) 'current-tab)))
+    (propertize
+     (concat (number-to-string i) "gt:" (alist-get 'name tab))
+     'face (if current-p 'tab-bar-tab 'tab-bar-tab-inactive))))
+
+(setq tab-bar-tab-name-format-function #'my/tab-bar-tab-name-format)
 (tab-bar-mode 1)
 
 ;; Tab bar styling (uses theme colors)
