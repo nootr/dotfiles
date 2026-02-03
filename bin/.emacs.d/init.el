@@ -253,8 +253,14 @@
   (define-key evil-window-map "T" #'my/vterm-split-right))
 
 ;;;; 13. Project.el (built-in)
+(require 'project)
 ;; Use vertico for xref results (project-find-regexp)
 (setq xref-show-xrefs-function #'xref-show-definitions-completing-read)
+;; Load known projects list at startup
+(when (file-exists-p project-list-file)
+  (with-temp-buffer
+    (insert-file-contents project-list-file)
+    (setq project--list (read (current-buffer)))))
 
 ;;;; 14. Tab-bar-mode
 (setq tab-bar-show t
@@ -354,12 +360,11 @@ Uses process filter to detect when shell is ready."
                                 (vterm-send-string command))))))))))))
 
 
-(defun my/open-project-workspace ()
-  "Open a project in a new tab with a 3-pane layout.
+(defun my/open-project-workspace-at (project)
+  "Open PROJECT in a new tab with a 3-pane layout.
 Code (top-left), Term (bottom-left), Claude (right)."
-  (interactive)
   (condition-case err
-      (let* ((project (expand-file-name (read-directory-name "Project: ")))
+      (let* ((project (expand-file-name project))
              (proj-name (file-name-nondirectory (directory-file-name project)))
              (default-directory project))
         (unless (file-directory-p project)
@@ -386,6 +391,11 @@ Code (top-left), Term (bottom-left), Claude (right)."
         (other-window 2))
     (quit (message "Workspace creation cancelled"))
     (error (message "Failed to create workspace: %s" (error-message-string err)))))
+
+(defun my/open-project-workspace ()
+  "Prompt for a project and open it in a workspace."
+  (interactive)
+  (my/open-project-workspace-at (read-directory-name "Project: ")))
 
 (global-set-key (kbd "C-x p w") #'my/open-project-workspace)
 
@@ -538,6 +548,31 @@ Only runs when welcome buffer is visible to save battery."
           (my/gol-step)
           (my/startup-screen-render))))))
 
+(defun my/recent-projects-box ()
+  "Generate recent projects box lines."
+  (let* ((projects (when (and (boundp 'project--list) (listp project--list))
+                     (seq-take (mapcar #'car project--list) 5)))
+         (max-name-len 20)
+         (lines '()))
+    (push "┌─Recent Projects─────────┐" lines)
+    (if projects
+        (let ((i 1))
+          (dolist (proj projects)
+            (let* ((name (file-name-nondirectory (directory-file-name proj)))
+                   (name (if (> (length name) max-name-len)
+                             (concat (substring name 0 (- max-name-len 2)) "..")
+                           name)))
+              (push (format "│ %d: %-20s │" i name) lines))
+            (setq i (1+ i)))
+          ;; Pad to 5 entries
+          (while (< (length lines) 6)
+            (push "│                         │" lines)))
+      (push "│   (no projects yet)     │" lines)
+      (dotimes (_ 4)
+        (push "│                         │" lines)))
+    (push "└─────────────────────────┘" lines)
+    (nreverse lines)))
+
 (defun my/startup-screen-render ()
   "Render the welcome screen content."
   (let ((inhibit-read-only t))
@@ -548,9 +583,10 @@ Only runs when welcome buffer is visible to save battery."
                        "│ Project   ;x p w   │"
                        "│ Terminal  ;x t t   │"
                        "└────────────────────┘"))
+           (projects-box (my/recent-projects-box))
            (gol-width (+ my/gol-width 2))
-           (help-width (length (car help-box)))
-           (total-height (+ (length gol-lines) 1 (length help-box))))
+           (boxes-width (+ (length (car help-box)) 2 (length (car projects-box))))
+           (total-height (+ (length gol-lines) 1 (max (length help-box) (length projects-box)))))
       ;; Center vertically
       (dotimes (_ (max 0 (/ (- (window-height) total-height) 2)))
         (insert "\n"))
@@ -560,10 +596,16 @@ Only runs when welcome buffer is visible to save battery."
         (insert line "\n"))
       ;; Spacer
       (insert "\n")
-      ;; Insert help box centered
-      (dolist (line help-box)
-        (insert (make-string (max 0 (/ (- (window-width) help-width) 2)) ?\s))
-        (insert line "\n")))
+      ;; Insert help and projects boxes side by side, centered
+      (let ((left-margin (max 0 (/ (- (window-width) boxes-width) 2)))
+            (help-len (length help-box))
+            (proj-len (length projects-box)))
+        (dotimes (i (max help-len proj-len))
+          (insert (make-string left-margin ?\s))
+          (insert (if (< i help-len) (nth i help-box) (make-string (length (car help-box)) ?\s)))
+          (insert "  ")
+          (insert (if (< i proj-len) (nth i projects-box) ""))
+          (insert "\n"))))
     (goto-char (point-min))))
 
 (defun my/gol-stop-timer ()
@@ -580,14 +622,32 @@ Only runs when welcome buffer is visible to save battery."
   (my/gol-init)
   (my/startup-screen-render))
 
+(defun my/open-recent-project (n)
+  "Open the Nth recent project (1-indexed) as a workspace."
+  (when (and (boundp 'project--list) (listp project--list))
+    (let ((projects (mapcar #'car project--list)))
+      (when (<= n (length projects))
+        (let ((proj (nth (1- n) projects)))
+          (my/open-project-workspace-at proj))))))
+
 (defvar my/welcome-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "SPC") #'my/gol-reset)
+    (define-key map (kbd "1") (lambda () (interactive) (my/open-recent-project 1)))
+    (define-key map (kbd "2") (lambda () (interactive) (my/open-recent-project 2)))
+    (define-key map (kbd "3") (lambda () (interactive) (my/open-recent-project 3)))
+    (define-key map (kbd "4") (lambda () (interactive) (my/open-recent-project 4)))
+    (define-key map (kbd "5") (lambda () (interactive) (my/open-recent-project 5)))
     map)
   "Keymap for welcome screen.")
 
 (with-eval-after-load 'evil
-  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "SPC") #'my/gol-reset))
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "SPC") #'my/gol-reset)
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "1") (lambda () (interactive) (my/open-recent-project 1)))
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "2") (lambda () (interactive) (my/open-recent-project 2)))
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "3") (lambda () (interactive) (my/open-recent-project 3)))
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "4") (lambda () (interactive) (my/open-recent-project 4)))
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "5") (lambda () (interactive) (my/open-recent-project 5))))
 
 (defun my/startup-screen ()
   "Display a minimal welcome screen with Game of Life."
