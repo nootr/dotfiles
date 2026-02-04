@@ -506,20 +506,13 @@ Code (top-left), Term (bottom-left), Claude (right)."
 (defun my/gol-render ()
   "Render Game of Life grid as list of strings.
 Uses half-block characters: each char shows 2 vertical cells."
-  (let ((lines '())
+  (let ((box-lines '())
         (border-width my/gol-width)
         (figure-face '(:foreground "#ff79c6"))
         (w my/gol-width)
         (h my/gol-height))
-    ;; Stick figure sitting on top-right edge
-    (push (concat (make-string border-width ?\s)
-                  (propertize "o  Hi!" 'face figure-face)) lines)
-    (push (concat (make-string border-width ?\s)
-                  (propertize "|┘" 'face figure-face)) lines)
-    ;; Top border with gap for legs
-    (push (concat "┌" (make-string (- border-width 1) ?─)
-                  (propertize "└┐┐" 'face figure-face)) lines)
-    ;; Grid: 2 rows per line, 1 col per char
+    ;; Build box (top border, grid, bottom border)
+    (push (concat "┌" (make-string border-width ?─) "┐") box-lines)
     (let ((y 0))
       (while (< y h)
         (let ((line "│")
@@ -531,12 +524,23 @@ Uses half-block characters: each char shows 2 vertical cells."
                    (idx (+ (* top 2) bot)))
               (setq line (concat line (aref my/gol-halfblocks idx)))))
           (setq line (concat line "│"))
-          (push line lines))
+          (push line box-lines))
         (setq y (+ y 2))))
     (let* ((hint "[spacebar: reset]")
            (padding (/ (- border-width (length hint)) 2)))
-      (push (concat "└" (make-string padding ?─) hint (make-string (- border-width (length hint) padding) ?─) "┘") lines))
-    (nreverse lines)))
+      (push (concat "└" (make-string padding ?─) hint (make-string (- border-width (length hint) padding) ?─) "┘") box-lines))
+    (setq box-lines (nreverse box-lines))
+    ;; Add shadow to box
+    (setq box-lines (my/add-box-shadow box-lines))
+    ;; Replace top border with version that has legs
+    (setcar box-lines (concat "┌" (make-string (- border-width 1) ?─)
+                              (propertize "└┐┐" 'face figure-face) " "))
+    ;; Prepend stick figure
+    (cons (concat (make-string border-width ?\s)
+                  (propertize "o  Hi!" 'face figure-face))
+          (cons (concat (make-string border-width ?\s)
+                        (propertize "|┘" 'face figure-face))
+                box-lines))))
 
 (defun my/gol-update-display ()
   "Update the welcome screen with new Game of Life state.
@@ -585,18 +589,33 @@ Only runs when welcome buffer is visible to save battery."
     (push "└─────────────────────────┘" lines)
     (nreverse lines)))
 
+(defun my/add-box-shadow (lines)
+  "Add shadow to the right and bottom of box LINES."
+  (let ((width (length (car lines)))
+        (result '())
+        (first t)
+        (shadow-face '(:foreground "#555555")))
+    ;; Add shadow to right of each line (skip first)
+    (dolist (line lines)
+      (push (concat line (if first " " (propertize "░" 'face shadow-face))) result)
+      (setq first nil))
+    ;; Add bottom shadow
+    (push (concat " " (propertize (make-string width ?░) 'face shadow-face)) result)
+    (nreverse result)))
+
 (defun my/startup-screen-render ()
   "Render the welcome screen content."
   (let ((inhibit-read-only t))
     (erase-buffer)
     (let* ((gol-lines (my/gol-render))
-           (help-box '("┌────────────────────┐"
-                       "│ Help      ;x ?     │"
-                       "│ Project   ;x p w   │"
-                       "│ Terminal  ;x t t   │"
-                       "└────────────────────┘"))
-           (projects-box (my/recent-projects-box))
-           (gol-width (+ my/gol-width 2))
+           (help-box (my/add-box-shadow
+                      '("┌────────────────────┐"
+                        "│ Help      ;x ?     │"
+                        "│ Project   ;x p w   │"
+                        "│ Terminal  ;x t t   │"
+                        "└────────────────────┘")))
+           (projects-box (my/add-box-shadow (my/recent-projects-box)))
+           (gol-width (+ my/gol-width 3))
            (boxes-width (+ (length (car help-box)) 2 (length (car projects-box))))
            (total-height (+ (length gol-lines) 1 (max (length help-box) (length projects-box)))))
       ;; Center vertically
