@@ -128,6 +128,28 @@
   :config
   (evil-collection-init))
 
+;; Custom :q that kills tab buffers before closing
+(defun my/quit-tab ()
+  "Kill all buffers in current tab, then close the tab (or frame if last tab)."
+  (interactive)
+  (let ((buffers-to-kill '()))
+    ;; Collect buffers from all windows in current tab
+    (dolist (win (window-list))
+      (let ((buf (window-buffer win)))
+        (unless (member buf buffers-to-kill)
+          (push buf buffers-to-kill))))
+    ;; Close tab or frame
+    (if (> (length (tab-bar-tabs)) 1)
+        (tab-bar-close-tab)
+      (delete-frame))
+    ;; Kill the collected buffers
+    (dolist (buf buffers-to-kill)
+      (when (buffer-live-p buf)
+        (kill-buffer buf)))))
+
+(with-eval-after-load 'evil
+  (evil-ex-define-cmd "q" #'my/quit-tab))
+
 ;; Use ; as Control prefix in normal/visual/motion states
 ;; Press ; then any key to get C-<key> (e.g., ;x ;c = C-x C-c)
 (defun my/semicolon-ctrl ()
