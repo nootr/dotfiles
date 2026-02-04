@@ -548,10 +548,22 @@ Only runs when welcome buffer is visible to save battery."
           (my/gol-step)
           (my/startup-screen-render))))))
 
+(defun my/recent-projects-list ()
+  "Return deduplicated list of recent projects (by name)."
+  (when (and (boundp 'project--list) (listp project--list))
+    (let ((all-projects (mapcar #'car project--list))
+          (seen-names '())
+          (projects '()))
+      (dolist (proj all-projects)
+        (let ((name (file-name-nondirectory (directory-file-name proj))))
+          (unless (member name seen-names)
+            (push name seen-names)
+            (push proj projects))))
+      (nreverse projects))))
+
 (defun my/recent-projects-box ()
   "Generate recent projects box lines."
-  (let* ((projects (when (and (boundp 'project--list) (listp project--list))
-                     (seq-take (mapcar #'car project--list) 5)))
+  (let* ((projects (seq-take (my/recent-projects-list) 5))
          (max-name-len 20)
          (lines '()))
     (push "┌─Recent Projects─────────┐" lines)
@@ -624,11 +636,9 @@ Only runs when welcome buffer is visible to save battery."
 
 (defun my/open-recent-project (n)
   "Open the Nth recent project (1-indexed) as a workspace."
-  (when (and (boundp 'project--list) (listp project--list))
-    (let ((projects (mapcar #'car project--list)))
-      (when (<= n (length projects))
-        (let ((proj (nth (1- n) projects)))
-          (my/open-project-workspace-at proj))))))
+  (let ((projects (my/recent-projects-list)))
+    (when (<= n (length projects))
+      (my/open-project-workspace-at (nth (1- n) projects)))))
 
 (defvar my/welcome-mode-map
   (let ((map (make-sparse-keymap)))
