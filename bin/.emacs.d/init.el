@@ -239,10 +239,11 @@
   :commands vterm)
 
 (defun my/vterm-in-new-tab ()
-  "Open a terminal in a new tab."
+  "Open a terminal in a new tab (no evil mode)."
   (interactive)
   (tab-bar-new-tab)
-  (vterm (generate-new-buffer-name "*vterm*")))
+  (vterm (generate-new-buffer-name "*vterm*"))
+  (evil-emacs-state))
 
 (defun my/org-in-new-tab ()
   "Open an org scratch buffer in a new tab."
@@ -452,11 +453,13 @@ Code (top-left), Term (bottom-left), Claude (right)."
 ;; Kill vterm buffer when shell exits
 (setq vterm-kill-buffer-on-exit t)
 
-;; Disable evil in vterm - all keys go directly to terminal
-(with-eval-after-load 'evil
-  (evil-set-initial-state 'vterm-mode 'emacs))
-
+;; Vterm escape behavior (for split terminals with evil):
+;; - Insert mode: Esc switches to normal mode
+;; - Normal mode: Esc sends escape to terminal
 (with-eval-after-load 'vterm
+  (evil-define-key 'insert vterm-mode-map (kbd "<escape>") #'evil-normal-state)
+  (evil-define-key 'normal vterm-mode-map (kbd "<escape>")
+    (lambda () (interactive) (vterm-send-key "<escape>")))
   ;; Shift+Enter sends Ctrl+J (newline in Claude Code)
   (define-key vterm-mode-map (kbd "S-<return>") (lambda () (interactive) (vterm-send-key "j" nil nil t)))
   ;; Cmd-v to paste from clipboard in vterm
