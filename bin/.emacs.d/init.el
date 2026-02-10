@@ -292,14 +292,20 @@
       tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
 
 (defun my/tab-bar-tab-name-format (tab i)
-  "Format TAB name with index I as 'Ngt: name'."
+  "Format TAB name with index I as 'N: name'."
   (let ((current-p (eq (car tab) 'current-tab)))
     (propertize
-     (concat (number-to-string i) "gt:" (alist-get 'name tab))
+     (concat (number-to-string i) ":" (alist-get 'name tab))
      'face (if current-p 'tab-bar-tab 'tab-bar-tab-inactive))))
 
 (setq tab-bar-tab-name-format-function #'my/tab-bar-tab-name-format)
 (tab-bar-mode 1)
+
+;; Cmd+1..9 to switch tabs
+(dotimes (i 9)
+  (let ((n (1+ i)))
+    (global-set-key (kbd (format "M-%d" n))
+                    (lambda () (interactive) (tab-bar-select-tab n)))))
 
 ;; Tab bar styling (uses theme colors)
 (defun my/style-tab-bar ()
@@ -739,8 +745,8 @@ Project
   ;x b        Switch buffer (consult)
 
 Tabs
+  Cmd+1..9    Go to tab N
   gt / gT     Next / previous tab
-  1gt         Go to tab 1 (2gt for 2, etc.)
   ;x t 2      New tab
   ;x t 0      Close tab
   ;x t t      New tab with terminal
