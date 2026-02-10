@@ -446,37 +446,11 @@ Code (top-left), Term (bottom-left), Claude (right)."
 ;; Kill vterm buffer when shell exits
 (setq vterm-kill-buffer-on-exit t)
 
-;; Hide Emacs cursor in vterm insert mode (terminal has its own cursor)
-(defun my/vterm-hide-cursor ()
-  "Hide Emacs cursor when entering insert state in vterm."
-  (when (derived-mode-p 'vterm-mode)
-    (setq-local cursor-type nil)))
-
-(defun my/vterm-show-cursor ()
-  "Show Emacs cursor when leaving insert state in vterm."
-  (when (derived-mode-p 'vterm-mode)
-    (kill-local-variable 'cursor-type)))
-
-(defun my/vterm-escape-to-normal ()
-  "Switch to evil normal state in vterm (don't send escape)."
-  (interactive)
-  (evil-normal-state))
-
-(defun my/vterm-send-escape ()
-  "Send Escape key to vterm."
-  (interactive)
-  (vterm-send-key "<escape>"))
-
+;; Disable evil in vterm - all keys go directly to terminal
 (with-eval-after-load 'evil
-  (add-hook 'evil-insert-state-entry-hook #'my/vterm-hide-cursor)
-  (add-hook 'evil-insert-state-exit-hook #'my/vterm-show-cursor))
+  (evil-set-initial-state 'vterm-mode 'emacs))
 
-;; Vterm escape behavior:
-;; - Insert mode: Esc switches to normal mode
-;; - Normal mode: Esc sends escape to terminal
 (with-eval-after-load 'vterm
-  (evil-define-key 'insert vterm-mode-map (kbd "<escape>") #'my/vterm-escape-to-normal)
-  (evil-define-key 'normal vterm-mode-map (kbd "<escape>") #'my/vterm-send-escape)
   ;; Shift+Enter sends Ctrl+J (newline in Claude Code)
   (define-key vterm-mode-map (kbd "S-<return>") (lambda () (interactive) (vterm-send-key "j" nil nil t)))
   ;; Cmd-v to paste from clipboard in vterm
