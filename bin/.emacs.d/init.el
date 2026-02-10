@@ -285,6 +285,25 @@
     (insert-file-contents project-list-file)
     (setq project--list (read (current-buffer)))))
 
+;; Tab-local project root: always use the tab's project, not the buffer's directory
+(defun my/tab-project-root ()
+  "Return the project root stored on the current tab, or nil."
+  (alist-get 'my/project-root (cdr (tab-bar--current-tab-find))))
+
+(defun my/set-tab-project-root (dir)
+  "Store DIR as the project root for the current tab."
+  (let ((tab (tab-bar--current-tab-find)))
+    (setcdr tab (cons (cons 'my/project-root dir) (cdr tab)))))
+
+(defun my/project-current-override (orig-fn &rest args)
+  "Use tab-local project root if set, otherwise fall back to default."
+  (let ((tab-root (my/tab-project-root)))
+    (if tab-root
+        (project--find-in-directory tab-root)
+      (apply orig-fn args))))
+
+(advice-add 'project-current :around #'my/project-current-override)
+
 ;;;; 14. Tab-bar-mode
 (setq tab-bar-show t
       tab-bar-close-button-show nil
@@ -401,9 +420,10 @@ Code (top-left), Term (bottom-left), Claude (right)."
              (default-directory project))
         (unless (file-directory-p project)
           (error "Directory does not exist: %s" project))
-        ;; Create a named tab
+        ;; Create a named tab with project root
         (tab-bar-new-tab)
         (tab-bar-rename-tab proj-name)
+        (my/set-tab-project-root project)
         ;; Start with a dired/file buffer in the project root (top-left)
         (dired project)
         ;; Split right for Claude (full height)
