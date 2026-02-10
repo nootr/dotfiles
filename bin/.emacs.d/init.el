@@ -302,11 +302,14 @@
 (setq tab-bar-tab-name-format-function #'my/tab-bar-tab-name-format)
 (tab-bar-mode 1)
 
-;; Cmd+1..9 to switch tabs
+;; Cmd+1..9 to switch tabs (global + vterm which overrides global keys)
 (dotimes (i 9)
-  (let ((n (1+ i)))
-    (global-set-key (kbd (format "M-%d" n))
-                    (lambda () (interactive) (tab-bar-select-tab n)))))
+  (let ((n (1+ i))
+        (key (kbd (format "M-%d" (1+ i)))))
+    (global-set-key key (lambda () (interactive) (tab-bar-select-tab n)))
+    (with-eval-after-load 'vterm
+      (define-key vterm-mode-map key
+        (lambda () (interactive) (tab-bar-select-tab n))))))
 
 ;; Tab bar styling (uses theme colors)
 (defun my/style-tab-bar ()
