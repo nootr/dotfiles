@@ -208,7 +208,8 @@
 (use-package magit
   :bind ("C-x g" . magit-status-in-new-tab)
   :config
-  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  (add-hook 'magit-process-mode-hook #'goto-address-mode))
 
 ;;;; 9. Dirvish (better dired)
 (use-package dirvish
