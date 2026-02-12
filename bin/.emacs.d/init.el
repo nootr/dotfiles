@@ -468,6 +468,10 @@ Code (top-left), Term (bottom-left), Claude (right)."
 ;; Git-related files (.gitignore, .gitattributes, etc.)
 (use-package git-modes)
 
+;; YAML
+(use-package yaml-mode
+  :mode "\\.ya?ml\\'")
+
 ;; HTML/CSS/JS (built-in modes, just set indent)
 (setq css-indent-offset 2)
 (setq js-indent-level 2)
