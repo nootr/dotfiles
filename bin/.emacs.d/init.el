@@ -134,7 +134,19 @@
   (evil-define-key 'normal 'global "d" #'my/evil-delete)
   (evil-define-key 'normal 'global "c" #'my/evil-change)
   (evil-define-key 'visual 'global "d" #'my/evil-delete)
-  (evil-define-key 'visual 'global "c" #'my/evil-change))
+  (evil-define-key 'visual 'global "c" #'my/evil-change)
+  ;; Yank in visual mode: strip trailing whitespace
+  (defun my/evil-yank-trim-trailing (orig-fn beg end &rest args)
+    "After yanking in visual mode, trim trailing spaces from kill ring."
+    (apply orig-fn beg end args)
+    (when (evil-visual-state-p)
+      (let ((text (current-kill 0 t)))
+        (when text
+          (kill-new (mapconcat (lambda (line)
+                                 (replace-regexp-in-string "[ \t]+$" "" line))
+                               (split-string text "\n")
+                               "\n") t)))))
+  (advice-add 'evil-yank :around #'my/evil-yank-trim-trailing))
 
 (use-package evil-collection
   :after evil
