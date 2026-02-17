@@ -121,7 +121,20 @@
         interprogram-paste-function #'gui-selection-value)
   ;; Cmd-v to paste from clipboard
   (global-set-key (kbd "M-v") #'clipboard-yank)
-  (global-set-key (kbd "s-v") #'clipboard-yank))
+  (global-set-key (kbd "s-v") #'clipboard-yank)
+  ;; Delete/change without copying to clipboard (use black hole register)
+  (evil-define-operator my/evil-delete (beg end type register yank-handler)
+    "Delete without affecting kill ring unless a register is specified."
+    (interactive "<R><x><y>")
+    (evil-delete beg end type (or register ?_) yank-handler))
+  (evil-define-operator my/evil-change (beg end type register yank-handler)
+    "Change without affecting kill ring unless a register is specified."
+    (interactive "<R><x><y>")
+    (evil-change beg end type (or register ?_) yank-handler))
+  (evil-define-key 'normal 'global "d" #'my/evil-delete)
+  (evil-define-key 'normal 'global "c" #'my/evil-change)
+  (evil-define-key 'visual 'global "d" #'my/evil-delete)
+  (evil-define-key 'visual 'global "c" #'my/evil-change))
 
 (use-package evil-collection
   :after evil
