@@ -497,6 +497,10 @@ Code (top-left), Term (bottom-left), Claude (right)."
 (use-package yaml-mode
   :mode "\\.ya?ml\\'")
 
+;; Gleam
+(use-package gleam-mode
+  :mode "\\.gleam\\'")
+
 ;; HTML/CSS/JS (built-in modes, just set indent)
 (setq css-indent-offset 2)
 (setq js-indent-level 2)
