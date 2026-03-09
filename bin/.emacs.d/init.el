@@ -514,13 +514,97 @@ Code (top-left), Term (bottom-left), Claude (right)."
   (evil-set-initial-state 'vterm-mode 'emacs))
 
 (with-eval-after-load 'vterm
+  ;; Pass Escape directly to terminal
+  (define-key vterm-mode-map (kbd "<escape>") (lambda () (interactive) (vterm-send-key "<escape>")))
   ;; Shift+Enter sends Ctrl+J (newline in Claude Code)
   (define-key vterm-mode-map (kbd "S-<return>") (lambda () (interactive) (vterm-send-key "j" nil nil t)))
   ;; Cmd-v to paste from clipboard in vterm
   (define-key vterm-mode-map (kbd "M-v") #'vterm-yank)
   (define-key vterm-mode-map (kbd "s-v") #'vterm-yank))
 
-;;;; 19. Startup and help screens
+;;;; 19. Harry credentials and status
+
+(defvar my/harry-auth nil
+  "Base64-encoded 'user:pass' for harry.jhx.app, set at startup.")
+
+(defvar my/harry-status nil "Cached status for harry.jhx.app.")
+(defvar my/jhx-status nil   "Cached status for jhx.app.")
+
+(defun my/harry-prompt-credentials ()
+  "Prompt for harry username and password, store base64 encoded."
+  (let* ((user (read-string "Harry username: "))
+         (pass (read-passwd "Harry password: "))
+         (raw (concat user ":" pass)))
+    (setq my/harry-auth (base64-encode-string raw t))))
+
+(defun my/harry-refresh-welcome ()
+  "Re-render the welcome screen if visible."
+  (when-let ((buf (get-buffer "*welcome*")))
+    (when (get-buffer-window buf t)
+      (with-current-buffer buf
+        (my/startup-screen-render)))))
+
+(defun my/status-dot (status)
+  "Return a colored dot string for STATUS symbol."
+  (cond
+   ((null status)        "  ○  ")
+   ((eq status 'loading) "  …  ")
+   ((eq status 'up)      (propertize "  ●  " 'face '(:foreground "#50fa7b")))
+   (t                    (propertize "  ●  " 'face '(:foreground "#ff5555")))))
+
+(defun my/harry-fetch-status ()
+  "Fetch status from harry.jhx.app and cache result."
+  (interactive)
+  (when my/harry-auth
+    (setq my/harry-status 'loading)
+    (my/harry-refresh-welcome)
+    (condition-case err
+        (let ((url-request-extra-headers
+               `(("Authorization" . ,(concat "Basic " my/harry-auth)))))
+          (url-retrieve "https://harry.jhx.app/stats"
+                        (lambda (status)
+                          (unwind-protect
+                              (setq my/harry-status
+                                    (if (plist-get status :error) 'down 'up))
+                            (my/harry-refresh-welcome)))
+                        nil t t))
+      (error (setq my/harry-status 'down)
+             (my/harry-refresh-welcome)))))
+
+(defun my/jhx-fetch-status ()
+  "Fetch status from jhx.app and cache result."
+  (interactive)
+  (setq my/jhx-status 'loading)
+  (my/harry-refresh-welcome)
+  (condition-case _err
+      (url-retrieve "https://jhx.app/"
+                    (lambda (status)
+                      (unwind-protect
+                          (setq my/jhx-status
+                                (if (plist-get status :error) 'down 'up))
+                        (my/harry-refresh-welcome)))
+                    nil t t)
+    (error (setq my/jhx-status 'down)
+           (my/harry-refresh-welcome))))
+
+(defun my/fetch-all-statuses ()
+  "Fetch all service statuses."
+  (interactive)
+  (my/harry-fetch-status)
+  (my/jhx-fetch-status))
+
+(defun my/harry-status-box ()
+  "Generate services status box lines."
+  (list "┌─Status─────────────────┐"
+        (format "│%s%s│" (my/status-dot my/harry-status) "harry.jhx.app      ")
+        (format "│%s%s│" (my/status-dot my/jhx-status)   "jhx.app            ")
+        "│ [r: refresh]           │"
+        "└────────────────────────┘"))
+
+;; Prompt for credentials at startup
+(add-hook 'emacs-startup-hook #'my/harry-prompt-credentials)
+
+;;;; 20. Startup and help screens
 
 ;; Game of Life state
 (defvar my/gol-width 100)
@@ -674,9 +758,12 @@ Only runs when welcome buffer is visible to save battery."
                         "│ Terminal  ;x t t   │"
                         "└────────────────────┘")))
            (projects-box (my/add-box-shadow (my/recent-projects-box)))
+           (harry-box (my/add-box-shadow (my/harry-status-box)))
            (gol-width (+ my/gol-width 3))
-           (boxes-width (+ (length (car help-box)) 2 (length (car projects-box))))
-           (total-height (+ (length gol-lines) 1 (max (length help-box) (length projects-box)))))
+           (row1-width (+ (length (car help-box)) 2 (length (car projects-box))))
+           (row2-width (length (car harry-box)))
+           (boxes-width (max row1-width row2-width))
+           (total-height (+ (length gol-lines) 1 (max (length help-box) (length projects-box)) 1 (length harry-box))))
       ;; Center vertically
       (dotimes (_ (max 0 (/ (- (window-height) total-height) 2)))
         (insert "\n"))
@@ -687,7 +774,7 @@ Only runs when welcome buffer is visible to save battery."
       ;; Spacer
       (insert "\n")
       ;; Insert help and projects boxes side by side, centered
-      (let ((left-margin (max 0 (/ (- (window-width) boxes-width) 2)))
+      (let ((left-margin (max 0 (/ (- (window-width) row1-width) 2)))
             (help-len (length help-box))
             (proj-len (length projects-box)))
         (dotimes (i (max help-len proj-len))
@@ -695,7 +782,14 @@ Only runs when welcome buffer is visible to save battery."
           (insert (if (< i help-len) (nth i help-box) (make-string (length (car help-box)) ?\s)))
           (insert "  ")
           (insert (if (< i proj-len) (nth i projects-box) ""))
-          (insert "\n"))))
+          (insert "\n")))
+      ;; Spacer
+      (insert "\n")
+      ;; Insert harry status box centered
+      (let ((left-margin (max 0 (/ (- (window-width) row2-width) 2))))
+        (dolist (line harry-box)
+          (insert (make-string left-margin ?\s))
+          (insert line "\n"))))
     (goto-char (point-min))))
 
 (defun my/gol-stop-timer ()
@@ -721,6 +815,7 @@ Only runs when welcome buffer is visible to save battery."
 (defvar my/welcome-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "SPC") #'my/gol-reset)
+    (define-key map (kbd "r") #'my/fetch-all-statuses)
     (define-key map (kbd "1") (lambda () (interactive) (my/open-recent-project 1)))
     (define-key map (kbd "2") (lambda () (interactive) (my/open-recent-project 2)))
     (define-key map (kbd "3") (lambda () (interactive) (my/open-recent-project 3)))
@@ -731,6 +826,7 @@ Only runs when welcome buffer is visible to save battery."
 
 (with-eval-after-load 'evil
   (evil-define-key '(normal motion) my/welcome-mode-map (kbd "SPC") #'my/gol-reset)
+  (evil-define-key '(normal motion) my/welcome-mode-map (kbd "r") #'my/fetch-all-statuses)
   (evil-define-key '(normal motion) my/welcome-mode-map (kbd "1") (lambda () (interactive) (my/open-recent-project 1)))
   (evil-define-key '(normal motion) my/welcome-mode-map (kbd "2") (lambda () (interactive) (my/open-recent-project 2)))
   (evil-define-key '(normal motion) my/welcome-mode-map (kbd "3") (lambda () (interactive) (my/open-recent-project 3)))
