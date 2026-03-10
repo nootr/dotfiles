@@ -510,13 +510,13 @@ Code (top-left), Term (bottom-left), Claude (right)."
 (setq vterm-kill-buffer-on-exit t)
 
 ;; In vterm, Esc always passes through to the terminal.
-;; Super+Esc switches evil to normal mode (without sending to terminal).
+;; C-\ switches evil to normal mode (without sending to terminal).
 (with-eval-after-load 'evil
   (dolist (state '(normal insert visual emacs))
     (evil-define-key state vterm-mode-map (kbd "<escape>")
       (lambda () (interactive) (vterm-send-key "<escape>"))))
   (dolist (state '(insert emacs))
-    (evil-define-key state vterm-mode-map (kbd "s-<escape>")
+    (evil-define-key state vterm-mode-map (kbd "C-\\")
       #'evil-normal-state)))
 
 (with-eval-after-load 'vterm
@@ -531,8 +531,10 @@ Code (top-left), Term (bottom-left), Claude (right)."
 (defvar my/harry-auth nil
   "Base64-encoded 'user:pass' for harry.jhx.app, set at startup.")
 
-(defvar my/harry-status nil "Cached status for harry.jhx.app.")
-(defvar my/jhx-status nil   "Cached status for jhx.app.")
+(defvar my/harry-status nil  "Cached status for harry.jhx.app.")
+(defvar my/harry-util-5h nil "5h utilization % from harry.jhx.app.")
+(defvar my/harry-util-7d nil "7d utilization % from harry.jhx.app.")
+(defvar my/jhx-status nil    "Cached status for jhx.app.")
 
 (defun my/harry-prompt-credentials ()
   "Prompt for harry username and password, store base64 encoded."
@@ -556,11 +558,23 @@ Code (top-left), Term (bottom-left), Claude (right)."
    ((eq status 'up)      (propertize "  ●  " 'face '(:foreground "#50fa7b")))
    (t                    (propertize "  ●  " 'face '(:foreground "#ff5555")))))
 
+(defun my/util-bar (pct width)
+  "Return a colored progress bar string for PCT percent with WIDTH chars."
+  (let* ((filled (round (* width (/ (min 100.0 (max 0.0 pct)) 100.0))))
+         (empty (- width filled))
+         (color (cond ((>= pct 80) "#ff5555")
+                      ((>= pct 50) "#ffb86c")
+                      (t           "#50fa7b"))))
+    (concat (propertize (make-string filled ?█) 'face `(:foreground ,color))
+            (propertize (make-string empty  ?░) 'face '(:foreground "#555555")))))
+
 (defun my/harry-fetch-status ()
   "Fetch status from harry.jhx.app and cache result."
   (interactive)
   (when my/harry-auth
-    (setq my/harry-status 'loading)
+    (setq my/harry-status 'loading
+          my/harry-util-5h nil
+          my/harry-util-7d nil)
     (my/harry-refresh-welcome)
     (condition-case err
         (let ((url-request-extra-headers
@@ -568,8 +582,18 @@ Code (top-left), Term (bottom-left), Claude (right)."
           (url-retrieve "https://harry.jhx.app/stats"
                         (lambda (status)
                           (unwind-protect
-                              (setq my/harry-status
-                                    (if (plist-get status :error) 'down 'up))
+                              (if (plist-get status :error)
+                                  (setq my/harry-status 'down)
+                                (goto-char (point-min))
+                                (when (re-search-forward "\r?\n\r?\n" nil t)
+                                  (ignore-errors
+                                    (let* ((data (json-parse-string
+                                                  (buffer-substring-no-properties (point) (point-max))))
+                                           (fh (gethash "five_hour" data))
+                                           (sd (gethash "seven_day" data)))
+                                      (setq my/harry-util-5h (gethash "utilization" fh)
+                                            my/harry-util-7d (gethash "utilization" sd)))))
+                                (setq my/harry-status 'up))
                             (my/harry-refresh-welcome)))
                         nil t t))
       (error (setq my/harry-status 'down)
@@ -599,11 +623,15 @@ Code (top-left), Term (bottom-left), Claude (right)."
 
 (defun my/harry-status-box ()
   "Generate services status box lines."
-  (list "┌─Status─────────────────┐"
-        (format "│%s%s│" (my/status-dot my/harry-status) "harry.jhx.app      ")
-        (format "│%s%s│" (my/status-dot my/jhx-status)   "jhx.app            ")
-        "│ [r: refresh]           │"
-        "└────────────────────────┘"))
+  (append
+   (list "┌─Status─────────────────┐"
+         (format "│%s%s│" (my/status-dot my/harry-status) "harry.jhx.app      ")
+         (format "│%s%s│" (my/status-dot my/jhx-status)   "jhx.app            "))
+   (when (and my/harry-util-5h my/harry-util-7d)
+     (list (format "│  5h [%s] %3d%%  │" (my/util-bar my/harry-util-5h 10) (round my/harry-util-5h))
+           (format "│  7d [%s] %3d%%  │" (my/util-bar my/harry-util-7d 10) (round my/harry-util-7d))))
+   (list "│ [r: refresh]           │"
+         "└────────────────────────┘")))
 
 ;; Prompt for credentials at startup
 (add-hook 'emacs-startup-hook #'my/harry-prompt-credentials)
@@ -909,6 +937,11 @@ Tabs
   ;x t t      New tab with terminal
   ;x t o      New tab with org
 
+Terminal (vterm)
+  Esc         Pass Esc to terminal (e.g. exit vim insert mode)
+  C-\         Enter evil normal mode (for ;wj etc.)
+  i           Enter insert mode (type in terminal)
+
 Completion
   C-n / C-p   Next / previous candidate
 
@@ -918,7 +951,7 @@ Other
   ;h k / ;h f Describe key / function
   ;x ?        This help screen
 
-Mac keys: Command = Meta (M-), Option = Super (s-)
+Mac keys: Command = Meta (M-), Option = Super (s- = Windows logo key)
 ")
       (goto-char (point-min))
       (read-only-mode 1))
