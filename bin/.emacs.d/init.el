@@ -511,7 +511,14 @@ Code (top-left), Term (bottom-left), Claude (right)."
 
 ;; Disable evil in all vterm buffers - all keys go directly to terminal
 (with-eval-after-load 'evil
-  (evil-set-initial-state 'vterm-mode 'emacs))
+  (evil-set-initial-state 'vterm-mode 'emacs)
+  ;; If evil somehow ends up in normal/insert/visual state in vterm,
+  ;; Esc should still pass through to the terminal and return to emacs state
+  (dolist (state '(normal insert visual))
+    (evil-define-key state vterm-mode-map (kbd "<escape>")
+      (lambda () (interactive)
+        (vterm-send-key "<escape>")
+        (evil-emacs-state)))))
 
 (with-eval-after-load 'vterm
   ;; Pass Escape directly to terminal
