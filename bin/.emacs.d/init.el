@@ -509,20 +509,13 @@ Code (top-left), Term (bottom-left), Claude (right)."
 ;; Kill vterm buffer when shell exits
 (setq vterm-kill-buffer-on-exit t)
 
-;; Disable evil in all vterm buffers - all keys go directly to terminal
+;; In vterm, Esc always passes through to the terminal regardless of evil state
 (with-eval-after-load 'evil
-  (evil-set-initial-state 'vterm-mode 'emacs)
-  ;; If evil somehow ends up in normal/insert/visual state in vterm,
-  ;; Esc should still pass through to the terminal and return to emacs state
-  (dolist (state '(normal insert visual))
+  (dolist (state '(normal insert visual emacs))
     (evil-define-key state vterm-mode-map (kbd "<escape>")
-      (lambda () (interactive)
-        (vterm-send-key "<escape>")
-        (evil-emacs-state)))))
+      (lambda () (interactive) (vterm-send-key "<escape>")))))
 
 (with-eval-after-load 'vterm
-  ;; Pass Escape directly to terminal
-  (define-key vterm-mode-map (kbd "<escape>") (lambda () (interactive) (vterm-send-key "<escape>")))
   ;; Shift+Enter sends Ctrl+J (newline in Claude Code)
   (define-key vterm-mode-map (kbd "S-<return>") (lambda () (interactive) (vterm-send-key "j" nil nil t)))
   ;; Cmd-v to paste from clipboard in vterm
