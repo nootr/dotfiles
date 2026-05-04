@@ -1,2 +1,3 @@
 .netrwhist
 .DS_Store
+bin/.pi/agent/auth.json

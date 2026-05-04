@@ -438,7 +438,7 @@ Uses process filter to detect when shell is ready."
 
 (defun my/open-project-workspace-at (project)
   "Open PROJECT in a new tab with a 3-pane layout.
-Code (top-left), Term (bottom-left), Claude (right)."
+Code (top-left), Term (bottom-left), Pi (right)."
   (condition-case err
       (let* ((project (expand-file-name project))
              (proj-name (file-name-nondirectory (directory-file-name project)))
@@ -451,20 +451,20 @@ Code (top-left), Term (bottom-left), Claude (right)."
         (my/set-tab-project-root project)
         ;; Start with a dired/file buffer in the project root (top-left)
         (dired project)
-        ;; Split right for Claude (full height)
+        ;; Split right for Pi (full height)
         (split-window-right (floor (* 0.5 (window-total-width))))
         (other-window 1)
-        (vterm (format "*claude-%s*" proj-name))
+        (vterm (format "*pi-%s*" proj-name))
         (evil-normal-state)
-        ;; Send claude command after shell initializes
-        (my/vterm-send-after-init (current-buffer) "claude --resume\n")
+        ;; Send pi command after shell initializes
+        (my/vterm-send-after-init (current-buffer) "pi\n")
         ;; Go back to left side and split for terminal (bottom-left)
         (other-window 1)
         (split-window-below)
         (other-window 1)
         (vterm (format "*term-%s*" proj-name))
         (evil-normal-state)
-        ;; Focus on Claude pane (right)
+        ;; Focus on Pi pane (right)
         (other-window 2))
     (quit (message "Workspace creation cancelled"))
     (error (message "Failed to create workspace: %s" (error-message-string err)))))
@@ -520,7 +520,7 @@ Code (top-left), Term (bottom-left), Claude (right)."
       #'evil-normal-state)))
 
 (with-eval-after-load 'vterm
-  ;; Shift+Enter sends Ctrl+J (newline in Claude Code)
+  ;; Shift+Enter sends Ctrl+J (newline in coding-agent terminals)
   (define-key vterm-mode-map (kbd "S-<return>") (lambda () (interactive) (vterm-send-key "j" nil nil t)))
   ;; Cmd-v to paste from clipboard in vterm
   (define-key vterm-mode-map (kbd "M-v") #'vterm-yank)
