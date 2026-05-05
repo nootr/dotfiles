@@ -1,3 +1,5 @@
 .netrwhist
 .DS_Store
 bin/.pi/agent/auth.json
+bin/.muttrc
+bin/.puppetdb_query_helper.yaml
