@@ -1,9 +1,9 @@
 ---
-name: testable-branch-loop
-description: Start implementation work by grilling the user, creating a fresh branch from latest main/master, then iterating in a simple Ralph Wiggum-style test-first loop until the definition of done is verified. Use when starting a feature, bugfix, refactor, or implementation task that should be testable and safely scoped.
+name: goal
+description: Start implementation work by grilling the user, creating a fresh branch from latest main/master, then iterating in a simple Ralph Wiggum-style test-first loop until the definition of done is verified. Use when the user invokes /goal or starts a feature, bugfix, refactor, or implementation task that should be testable and safely scoped.
 ---
 
-# Testable Branch Loop
+# Goal
 
 Use this workflow for implementation tasks where the goal is to clarify scope, branch safely from the latest base branch, and iterate until a testable definition of done is met.
 
